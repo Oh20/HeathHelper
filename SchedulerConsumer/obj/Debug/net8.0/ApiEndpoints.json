@@ -1,0 +1,65 @@
+[
+  {
+    "ContainingType": "MedicoController",
+    "Method": "ListarConsultasMedico",
+    "RelativePath": "api/medicos/{medicoId}/consultas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "medicoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PacienteController",
+    "Method": "ListarConsultasPaciente",
+    "RelativePath": "api/pacientes/{pacienteId}/consultas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pacienteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SlotController",
+    "Method": "GetSlotsDisponiveis",
+    "RelativePath": "api/slots/slots/disponiveis",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "especialidade",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "data",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "medicoId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "valorMaximo",
+        "Type": "System.Nullable\u00601[[System.Decimal, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

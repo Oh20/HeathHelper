@@ -1,0 +1,11 @@
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\bin\Debug\net8.0\HealthHelperDTOs.deps.json
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\bin\Debug\net8.0\HealthHelperDTOs.dll
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\bin\Debug\net8.0\HealthHelperDTOs.pdb
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\obj\Debug\net8.0\HealthHelperDTOs.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\obj\Debug\net8.0\HealthHelperDTOs.AssemblyInfoInputs.cache
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\obj\Debug\net8.0\HealthHelperDTOs.AssemblyInfo.cs
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\obj\Debug\net8.0\HealthHelperDTOs.csproj.CoreCompileInputs.cache
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\obj\Debug\net8.0\HealthHelperDTOs.dll
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\obj\Debug\net8.0\refint\HealthHelperDTOs.dll
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\obj\Debug\net8.0\HealthHelperDTOs.pdb
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\Health&MedDTOs\obj\Debug\net8.0\ref\HealthHelperDTOs.dll

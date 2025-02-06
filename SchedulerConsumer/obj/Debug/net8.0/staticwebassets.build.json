@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "g1dAl3YI7atcvJD9JcrzRVVnRAfJGot+iNOM3HXRnvo=",
+  "Source": "SchedulerConsumer",
+  "BasePath": "_content/SchedulerConsumer",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

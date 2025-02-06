@@ -1,0 +1,149 @@
+[
+  {
+    "ContainingType": "AgendaController",
+    "Method": "ListarSlotsDisponiveis",
+    "RelativePath": "api/agenda/slots/disponiveis",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "especialidade",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "data",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "medicoId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ConsultaController",
+    "Method": "AgendarConsulta",
+    "RelativePath": "api/consultas",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "consultaDto",
+        "Type": "NovaConsultaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ConsultaController",
+    "Method": "AtualizarStatusConsulta",
+    "RelativePath": "api/consultas/{consultaId}/status",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "consultaId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "medicoId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updateDto",
+        "Type": "ConsultaUpdateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoController",
+    "Method": "CriarSlots",
+    "RelativePath": "api/medicos/{medicoId}/agenda/slots",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "medicoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "slots",
+        "Type": "AgendaInputDto[]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoController",
+    "Method": "AtualizarSlot",
+    "RelativePath": "api/medicos/{medicoId}/agenda/slots/{agendaId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "medicoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "agendaId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "slot",
+        "Type": "AgendaInputDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoController",
+    "Method": "ListarConsultasMedico",
+    "RelativePath": "api/medicos/{medicoId}/consultas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "medicoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PacienteController",
+    "Method": "ListarConsultasPaciente",
+    "RelativePath": "api/pacientes/{pacienteId}/consultas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pacienteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

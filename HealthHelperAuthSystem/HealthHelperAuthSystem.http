@@ -1,0 +1,6 @@
+@HealthHelperAuthSystem_HostAddress = http://localhost:5139
+
+GET {{HealthHelperAuthSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

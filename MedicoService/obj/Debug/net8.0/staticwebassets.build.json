@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "3CofjLiiEQ0jRQ8Y/Grg+a/TROq52jb5DUY39Oc0eyM=",
+  "Source": "MedicosService",
+  "BasePath": "_content/MedicosService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

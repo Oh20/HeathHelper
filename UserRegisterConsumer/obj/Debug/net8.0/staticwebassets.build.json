@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "kRP2yWG8O4nDYzpbU/RBUAkGMkl3wjTXrLdssNzHQpo=",
+  "Source": "UserRegisterConsumer",
+  "BasePath": "_content/UserRegisterConsumer",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
