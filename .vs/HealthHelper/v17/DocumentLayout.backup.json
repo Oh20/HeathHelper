@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5617BB1B-E898-4341-8E10-A6F71584A7AB}|AppoitmentScheduler\\AppoitmentScheduler.csproj|c:\\users\\oh20t\\source\\healthcareinc\\medicoservice\\appoitmentscheduler\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{5617BB1B-E898-4341-8E10-A6F71584A7AB}|AppoitmentScheduler\\AppoitmentScheduler.csproj|solutionrelative:appoitmentscheduler\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{5617BB1B-E898-4341-8E10-A6F71584A7AB}|AppoitmentScheduler\\AppoitmentScheduler.csproj|c:\\users\\oh20t\\source\\healthcareinc\\medicoservice\\appoitmentscheduler\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{5617BB1B-E898-4341-8E10-A6F71584A7AB}|AppoitmentScheduler\\AppoitmentScheduler.csproj|solutionrelative:appoitmentscheduler\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,14 +27,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Dockerfile",
-              "DocumentMoniker": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\Dockerfile",
-              "RelativeDocumentMoniker": "AppoitmentScheduler\\Dockerfile",
-              "ToolTip": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\Dockerfile",
-              "RelativeToolTip": "AppoitmentScheduler\\Dockerfile",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-02-06T17:08:34.805Z",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appsettings.json",
+              "RelativeDocumentMoniker": "AppoitmentScheduler\\appsettings.json",
+              "ToolTip": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appsettings.json",
+              "RelativeToolTip": "AppoitmentScheduler\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-02-07T14:26:41.116Z",
               "EditorCaption": ""
             }
           ]

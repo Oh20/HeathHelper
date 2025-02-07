@@ -42,6 +42,18 @@
         }
       }
     },
+    "/health": {
+      "get": {
+        "tags": [
+          "AppoitmentScheduler"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/consultas": {
       "post": {
         "tags": [

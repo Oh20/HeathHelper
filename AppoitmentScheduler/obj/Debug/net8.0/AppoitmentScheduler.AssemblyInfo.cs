@@ -12,12 +12,12 @@ using System;
 using System.Reflection;
 
 [assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("74c317ac-f0f8-43ce-9292-6a8c809d6b0e")]
-[assembly: System.Reflection.AssemblyCompanyAttribute("AppoitmentScheduler")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("appoitmentscheduler")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyProductAttribute("AppoitmentScheduler")]
-[assembly: System.Reflection.AssemblyTitleAttribute("AppoitmentScheduler")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fd1445bc61ee482b5fadee2af8522b89b0706a7f")]
+[assembly: System.Reflection.AssemblyProductAttribute("appoitmentscheduler")]
+[assembly: System.Reflection.AssemblyTitleAttribute("appoitmentscheduler")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.

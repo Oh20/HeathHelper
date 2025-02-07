@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\AppoitmentScheduler.csproj": {}
+    "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appoitmentscheduler.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\AppoitmentScheduler.csproj": {
+    "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appoitmentscheduler.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\AppoitmentScheduler.csproj",
-        "projectName": "AppoitmentScheduler",
-        "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\AppoitmentScheduler.csproj",
+        "projectUniqueName": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appoitmentscheduler.csproj",
+        "projectName": "appoitmentscheduler",
+        "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appoitmentscheduler.csproj",
         "packagesPath": "C:\\Users\\Oh20T\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\obj\\",
         "projectStyle": "PackageReference",

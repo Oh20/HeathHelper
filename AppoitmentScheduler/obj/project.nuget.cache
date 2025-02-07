@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LuADuAY10As=",
+  "dgSpecHash": "7ngLm9raOm8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\AppoitmentScheduler.csproj",
+  "projectFilePath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appoitmentscheduler.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Oh20T\\.nuget\\packages\\healthhelperdtos\\1.0.0\\healthhelperdtos.1.0.0.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",

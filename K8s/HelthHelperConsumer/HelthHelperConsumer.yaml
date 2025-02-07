@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      containers:
+      - name: consumer
+        image: healthhelperacr.azurecr.io/consumer:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: healthhelper-config
+              key: ASPNETCORE_ENVIRONMENT
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: healthhelper-secrets
+              key: ConnectionStrings__DefaultConnection
+        - name: RabbitMQ__HostName
+          valueFrom:
+            configMapKeyRef:
+              name: healthhelper-config
+              key: RabbitMQ__HostName
+        - name: RabbitMQ__Port
+          valueFrom:
+            configMapKeyRef:
+              name: healthhelper-config
+              key: RabbitMQ__Port
+        - name: RabbitMQ__UserName
+          valueFrom:
+            secretKeyRef:
+              name: healthhelper-secrets
+              key: RabbitMQ__UserName
+        - name: RabbitMQ__Password
+          valueFrom:
+            secretKeyRef:
+              name: healthhelper-secrets
+              key: RabbitMQ__Password
+        - name: UserServiceUrl
+          valueFrom:
+            configMapKeyRef:
+              name: healthhelper-config
+              key: UserServiceUrl

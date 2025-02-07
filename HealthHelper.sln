@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicosService", "MedicoSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserRegisterConsumer", "UserRegisterConsumer\UserRegisterConsumer.csproj", "{94E29804-C5A7-4640-BC55-69C34A1553EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppoitmentScheduler", "AppoitmentScheduler\AppoitmentScheduler.csproj", "{5617BB1B-E898-4341-8E10-A6F71584A7AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "appoitmentscheduler", "AppoitmentScheduler\appoitmentscheduler.csproj", "{5617BB1B-E898-4341-8E10-A6F71584A7AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerConsumer", "SchedulerConsumer\SchedulerConsumer.csproj", "{D38A35A5-AA34-4C3A-B43A-A26A9A202832}"
 EndProject

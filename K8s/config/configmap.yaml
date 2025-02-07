@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: healthhelper-config
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  RabbitMQ__HostName: "rabbitmq-service"
+  RabbitMQ__Port: "5672"
+  ConsumerServiceUrl: "http://consumer-service"
+  UserServiceUrl: "http://user-service"
+
