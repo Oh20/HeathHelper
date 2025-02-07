@@ -28,7 +28,7 @@ jobs:
         run: |
           SERVICES=(AppoitmentScheduler HealthHelperAuthSystem MedicosService SchedulerConsumer UserRegisterConsumer)
           for SERVICE in "${SERVICES[@]}"; do
-            IMAGE_NAME=seu-usuario/$(echo "$SERVICE" | tr '[:upper:]' '[:lower:]')
+            IMAGE_NAME=oh20/$(echo "$SERVICE" | tr '[:upper:]' '[:lower:]')
             VERSION=$(git rev-parse --short HEAD)
             docker build -t $IMAGE_NAME:$VERSION ./$SERVICE
             docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
