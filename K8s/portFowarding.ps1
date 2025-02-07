@@ -1,6 +1,6 @@
 # Definir os serviços e as portas a serem mapeadas
 $services = @(
-    @{ name = "appointment-scheduler-service"; localPort = 8001; servicePort = 80 },
+    @{ name = "appointment-scheduler-service"; localPort = 8001; servicePort = 8080 },
     @{ name = "auth-service"; localPort = 8002; servicePort = 80 },
     @{ name = "user-register-producer-service"; localPort = 8003; servicePort = 80 },
     @{ name = "scheduler-consumer-service"; localPort = 8004; servicePort = 80 },

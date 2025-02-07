@@ -175,5 +175,6 @@ C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\obj\Debug
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\obj\Debug\net8.0\UserRegisterConsumer.pdb
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\obj\Debug\net8.0\UserRegisterConsumer.genruntimeconfig.cache
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\obj\Debug\net8.0\ref\UserRegisterConsumer.dll
-C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\bin\Debug\net8.0\Health&MedDTOs.dll
-C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\bin\Debug\net8.0\Health&MedDTOs.pdb
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\bin\Debug\net8.0\HealthHelperDTOs.dll
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\bin\Debug\net8.0\HealthHelperDTOs.pdb
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\UserRegisterConsumer\obj\Debug\net8.0\UserRegisterConsumer.sourcelink.json
