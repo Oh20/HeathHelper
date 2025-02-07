@@ -33,7 +33,7 @@ jobs:
 
   # Job para o HealthHelperAuthSystem
   build_healthhelperauthsystem:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -121,7 +121,7 @@ jobs:
 
   # Job de deploy
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [build_appointmentscheduler, build_healthhelperauthsystem, build_medicosservice, build_schedulerconsumer, build_userregisterconsumer]
     steps:
       - name: Checkout repository
