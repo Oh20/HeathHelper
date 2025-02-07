@@ -2,17 +2,21 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurações do RabbitMQ para conexão
-var rabbitMQHostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "localhost";
-var rabbitMQPort = Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672";
-var rabbitMQUser = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest";
-var rabbitMQPassword = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest";
+var rabbitMqHost = Environment.GetEnvironmentVariable("RabbitMQ__HostName");
+var rabbitMqUser = Environment.GetEnvironmentVariable("RabbitMQ__UserName");
+var rabbitMqPass = Environment.GetEnvironmentVariable("RabbitMQ__Password");
 
-var rabbitMQConnectionString = $"amqp://{rabbitMQUser}:{rabbitMQPassword}@{rabbitMQHostName}:{rabbitMQPort}";
 
-// Configuração do Consumer Service
-var consumerServiceUrl = Environment.GetEnvironmentVariable("ConsumerServiceUrl")
-   ?? builder.Configuration["ConsumerServiceUrl"];
+if (string.IsNullOrEmpty(rabbitMqHost) || string.IsNullOrEmpty(rabbitMqUser) || string.IsNullOrEmpty(rabbitMqPass))
+{
+    throw new ArgumentNullException("RabbitMQ connection details are missing");
+}
+
+var connectionString = $"amqp://{rabbitMqUser}:{rabbitMqPass}@{rabbitMqHost}:5672/";
+
+// Configuração do SQL Server
+var dbConnection = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

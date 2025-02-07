@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XgmQwcuJhlg=",
+  "dgSpecHash": "oXMG9c8wta8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\MedicoService\\MedicosService.csproj",
+  "projectFilePath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\MedicosService\\MedicosService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Oh20T\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.1\\microsoft.entityframeworkcore.9.0.1.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.1\\microsoft.entityframeworkcore.abstractions.9.0.1.nupkg.sha512",

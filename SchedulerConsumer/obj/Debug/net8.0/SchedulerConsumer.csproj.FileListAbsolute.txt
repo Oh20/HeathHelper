@@ -177,5 +177,5 @@ C:\Users\Oh20T\source\HealthCareInc\MedicoService\SchedulerConsumer\bin\Debug\ne
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\SchedulerConsumer\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\SchedulerConsumer\bin\Debug\net8.0\Microsoft.Extensions.Http.dll
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\SchedulerConsumer\bin\Debug\net8.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
-C:\Users\Oh20T\source\HealthCareInc\MedicoService\SchedulerConsumer\bin\Debug\net8.0\Health&MedDTOs.dll
-C:\Users\Oh20T\source\HealthCareInc\MedicoService\SchedulerConsumer\bin\Debug\net8.0\Health&MedDTOs.pdb
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\SchedulerConsumer\bin\Debug\net8.0\HealthHelperDTOs.dll
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\SchedulerConsumer\obj\Debug\net8.0\SchedulerConsumer.sourcelink.json

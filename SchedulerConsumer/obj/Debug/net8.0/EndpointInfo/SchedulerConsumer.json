@@ -51,6 +51,18 @@
         }
       }
     },
+    "/health": {
+      "get": {
+        "tags": [
+          "SchedulerConsumer"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/slots/slots/disponiveis": {
       "get": {
         "tags": [

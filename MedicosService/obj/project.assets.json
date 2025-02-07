@@ -1251,11 +1251,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\MedicoService\\MedicosService.csproj",
+      "projectUniqueName": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\MedicosService\\MedicosService.csproj",
       "projectName": "MedicosService",
-      "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\MedicoService\\MedicosService.csproj",
+      "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\MedicosService\\MedicosService.csproj",
       "packagesPath": "C:\\Users\\Oh20T\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\MedicoService\\obj\\",
+      "outputPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\MedicosService\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

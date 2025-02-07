@@ -16,7 +16,7 @@ metadata:
   name: healthhelper-secrets
 type: Opaque
 stringData:
-  ConnectionStrings__DefaultConnection: "Server=localhost;Database=HealthHelper;User Id=sa;Password=YourPassword123!;TrustServerCertificate=True"
+  ConnectionStrings__DefaultConnection: "Server=tcp:labserversqltreo.database.windows.net,1433;Initial Catalog=lab01;Persist Security Info=False;User ID=azureadmin;Password=Senha@2024;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   RabbitMQ__UserName: "guest"
   RabbitMQ__Password: "guest"
   Jwt__Secret: "MinhaChaveSecreta123!"

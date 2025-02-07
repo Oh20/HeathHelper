@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MedicosService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b0245a0233c26bbe9cd7d940ee3594704f7bc28")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae85d92eea2e3a042d81dbbbde647252ae53c90a")]
 [assembly: System.Reflection.AssemblyProductAttribute("MedicosService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MedicosService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

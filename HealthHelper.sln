@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicosService", "MedicoService\MedicosService.csproj", "{8668676D-6637-457F-9FDF-962CF495A2F0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserRegisterConsumer", "UserRegisterConsumer\UserRegisterConsumer.csproj", "{94E29804-C5A7-4640-BC55-69C34A1553EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "appoitmentscheduler", "AppoitmentScheduler\appoitmentscheduler.csproj", "{5617BB1B-E898-4341-8E10-A6F71584A7AB}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerConsumer", "Schedu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthHelperAuthSystem", "HealthHelperAuthSystem\HealthHelperAuthSystem.csproj", "{C9DE0B52-0F23-4EB5-8D46-120434CEB62F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicosService", "MedicosService\MedicosService.csproj", "{1186B56E-E95F-4AFF-9840-EF456AB399F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8668676D-6637-457F-9FDF-962CF495A2F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8668676D-6637-457F-9FDF-962CF495A2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8668676D-6637-457F-9FDF-962CF495A2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8668676D-6637-457F-9FDF-962CF495A2F0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94E29804-C5A7-4640-BC55-69C34A1553EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{94E29804-C5A7-4640-BC55-69C34A1553EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94E29804-C5A7-4640-BC55-69C34A1553EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{C9DE0B52-0F23-4EB5-8D46-120434CEB62F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9DE0B52-0F23-4EB5-8D46-120434CEB62F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9DE0B52-0F23-4EB5-8D46-120434CEB62F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1186B56E-E95F-4AFF-9840-EF456AB399F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1186B56E-E95F-4AFF-9840-EF456AB399F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1186B56E-E95F-4AFF-9840-EF456AB399F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1186B56E-E95F-4AFF-9840-EF456AB399F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
