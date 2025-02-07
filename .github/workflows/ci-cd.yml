@@ -121,7 +121,7 @@ jobs:
 
   # Job de deploy
   deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, windows]
     needs: [build_appointmentscheduler, build_healthhelperauthsystem, build_medicosservice, build_schedulerconsumer, build_userregisterconsumer]
     steps:
       - name: Checkout repository
@@ -132,10 +132,12 @@ jobs:
           kubectl config use-context minikube || kubectl config use-context docker-desktop
 
       - name: Deploy to Local Kubernetes
+        shell: pwsh
         run: |
-          SERVICES=(AppoitmentScheduler HealthHelperAuthSystem MedicosService SchedulerConsumer UserRegisterConsumer)
-          for SERVICE in "${SERVICES[@]}"; do
-            IMAGE_NAME=seu-usuario/$(echo "$SERVICE" | tr '[:upper:]' '[:lower:]')
-            kubectl set image deployment/$SERVICE-deployment $SERVICE-container=$IMAGE_NAME:$(git rev-parse --short HEAD)
+          $SERVICES = @("AppoitmentScheduler", "HealthHelperAuthSystem", "MedicosService", "SchedulerConsumer", "UserRegisterConsumer")
+          foreach ($SERVICE in $SERVICES) {
+            $IMAGE_NAME = "seu-usuario/" + ($SERVICE.ToLower())
+            $VERSION = git rev-parse --short HEAD
+            kubectl set image deployment/$SERVICE-deployment $SERVICE-container=$IMAGE_NAME:$VERSION
             kubectl rollout status deployment/$SERVICE-deployment
-          done
+          }
