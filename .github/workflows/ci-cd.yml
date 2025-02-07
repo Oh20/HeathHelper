@@ -24,7 +24,7 @@ jobs:
 
       - name: Build and Push AppoitmentScheduler Docker Image
         run: |
-          IMAGE_NAME=seu-usuario/appoitmentscheduler
+          IMAGE_NAME=oh20/appoitmentscheduler
           VERSION=$(git rev-parse --short HEAD)
           docker build -t $IMAGE_NAME:$VERSION ./AppoitmentScheduler
           docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
@@ -46,7 +46,7 @@ jobs:
 
       - name: Build and Push HealthHelperAuthSystem Docker Image
         run: |
-          IMAGE_NAME=seu-usuario/healthhelperauthsystem
+          IMAGE_NAME=oh20/healthhelperauthsystem
           VERSION=$(git rev-parse --short HEAD)
           docker build -t $IMAGE_NAME:$VERSION ./HealthHelperAuthSystem
           docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
@@ -68,7 +68,7 @@ jobs:
 
       - name: Build and Push MedicosService Docker Image
         run: |
-          IMAGE_NAME=seu-usuario/medicosservice
+          IMAGE_NAME=oh20/medicosservice
           VERSION=$(git rev-parse --short HEAD)
           docker build -t $IMAGE_NAME:$VERSION ./MedicosService
           docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
@@ -90,7 +90,7 @@ jobs:
 
       - name: Build and Push SchedulerConsumer Docker Image
         run: |
-          IMAGE_NAME=seu-usuario/schedulerconsumer
+          IMAGE_NAME=oh20/schedulerconsumer
           VERSION=$(git rev-parse --short HEAD)
           docker build -t $IMAGE_NAME:$VERSION ./SchedulerConsumer
           docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
@@ -112,7 +112,7 @@ jobs:
 
       - name: Build and Push UserRegisterConsumer Docker Image
         run: |
-          IMAGE_NAME=seu-usuario/userregisterconsumer
+          IMAGE_NAME=oh20/userregisterconsumer
           VERSION=$(git rev-parse --short HEAD)
           docker build -t $IMAGE_NAME:$VERSION ./UserRegisterConsumer
           docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
