@@ -9,14 +9,12 @@ on:
       - main
 
 jobs:
-  build:
+  # Job para o AppoitmentScheduler
+  build_appointmentscheduler:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Debug - List Directory
-        run: ls -R .
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -24,21 +22,107 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Docker Images
+      - name: Build and Push AppoitmentScheduler Docker Image
         run: |
-          SERVICES=(AppoitmentScheduler HealthHelperAuthSystem MedicosService SchedulerConsumer UserRegisterConsumer)
-          for SERVICE in "${SERVICES[@]}"; do
-            IMAGE_NAME=oh20/$(echo "$SERVICE" | tr '[:upper:]' '[:lower:]')
-            VERSION=$(git rev-parse --short HEAD)
-            docker build -t $IMAGE_NAME:$VERSION ./$SERVICE
-            docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
-            docker push $IMAGE_NAME:$VERSION
-            docker push $IMAGE_NAME:latest
-          done
+          IMAGE_NAME=seu-usuario/appoitmentscheduler
+          VERSION=$(git rev-parse --short HEAD)
+          docker build -t $IMAGE_NAME:$VERSION ./AppoitmentScheduler
+          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:latest
 
+  # Job para o HealthHelperAuthSystem
+  build_healthhelperauthsystem:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push HealthHelperAuthSystem Docker Image
+        run: |
+          IMAGE_NAME=seu-usuario/healthhelperauthsystem
+          VERSION=$(git rev-parse --short HEAD)
+          docker build -t $IMAGE_NAME:$VERSION ./HealthHelperAuthSystem
+          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:latest
+
+  # Job para o MedicosService
+  build_medicosservice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push MedicosService Docker Image
+        run: |
+          IMAGE_NAME=seu-usuario/medicosservice
+          VERSION=$(git rev-parse --short HEAD)
+          docker build -t $IMAGE_NAME:$VERSION ./MedicosService
+          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:latest
+
+  # Job para o SchedulerConsumer
+  build_schedulerconsumer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push SchedulerConsumer Docker Image
+        run: |
+          IMAGE_NAME=seu-usuario/schedulerconsumer
+          VERSION=$(git rev-parse --short HEAD)
+          docker build -t $IMAGE_NAME:$VERSION ./SchedulerConsumer
+          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:latest
+
+  # Job para o UserRegisterConsumer
+  build_userregisterconsumer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push UserRegisterConsumer Docker Image
+        run: |
+          IMAGE_NAME=seu-usuario/userregisterconsumer
+          VERSION=$(git rev-parse --short HEAD)
+          docker build -t $IMAGE_NAME:$VERSION ./UserRegisterConsumer
+          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:latest
+
+  # Job de deploy
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build_appointmentscheduler, build_healthhelperauthsystem, build_medicosservice, build_schedulerconsumer, build_userregisterconsumer]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
