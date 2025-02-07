@@ -23,20 +23,24 @@ public class UserRegistrationConsumer : IDisposable
         _dbContext = dbContext;
         _logger = logger;
 
-        _logger.LogInformation($"Tentando conectar ao RabbitMQ com: {connectionString}");
-
         try
         {
-            var factory = new ConnectionFactory { Uri = new Uri(connectionString) };
+            var factory = new ConnectionFactory
+            {
+                HostName = "rabbitmq-service",  // Nome do serviço no K8s
+                Port = 5672,
+                UserName = "guest",
+                Password = "guest",
+                RequestedConnectionTimeout = TimeSpan.FromSeconds(30)
+            };
+
+            _logger.LogInformation($"Tentando conectar ao RabbitMQ em {factory.HostName}:{factory.Port}");
+
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
 
             _logger.LogInformation("Conexão com RabbitMQ estabelecida com sucesso");
-
-            // Configuração das filas
-            _channel.QueueDeclare(QUEUE_NAME_DOCTOR, durable: true, exclusive: false, autoDelete: false);
-            _channel.QueueDeclare(QUEUE_NAME_PATIENT, durable: true, exclusive: false, autoDelete: false);
-            _channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+            // ... resto do código
         }
         catch (Exception ex)
         {

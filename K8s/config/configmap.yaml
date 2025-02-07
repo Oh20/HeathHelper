@@ -3,17 +3,5 @@ kind: ConfigMap
 metadata:
   name: healthhelper-config
 data:
-  ASPNETCORE_ENVIRONMENT: "Production"
-  RabbitMQ__HostName: "rabbitmq-service"
-  RabbitMQ__Port: "5672"
-  UserServiceUrl: "http://user-register-consumer-service"
-  ConsumerServiceUrl: "http://scheduler-consumer-service"
-  AuthServiceUrl: "http://auth-service"
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: healthhelper-config
-data:
   RabbitMQ__HostName: "rabbitmq-service"  # Este é o nome do serviço do RabbitMQ no K8s
   RabbitMQ__Port: "5672"

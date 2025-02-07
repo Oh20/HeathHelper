@@ -18,8 +18,16 @@
       "DocumentGroups": [
         {
           "DockedWidth": 212,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -28,18 +36,10 @@
               "RelativeDocumentMoniker": "UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
               "ToolTip": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
               "RelativeToolTip": "UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAxwC0AAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAADAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-07T23:04:53.167Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
             },
             {
               "$type": "Document",
@@ -51,8 +51,7 @@
               "RelativeToolTip": "UserRegisterConsumer\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-07T22:09:29.881Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-07T22:09:29.881Z"
             }
           ]
         },
