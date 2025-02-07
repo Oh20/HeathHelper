@@ -25,27 +25,51 @@ public class UserRegistrationConsumer : IDisposable
 
         try
         {
+            // Log das configurações recebidas
+            _logger.LogInformation($"Configurações RabbitMQ - Host: {rabbitMqConfig.HostName}, Porta: {rabbitMqConfig.Port}");
+
             var factory = new ConnectionFactory
             {
-                HostName = rabbitMqConfig.HostName,
-                Port = rabbitMqConfig.Port,
-                UserName = rabbitMqConfig.UserName,
-                Password = rabbitMqConfig.Password,
+                HostName = rabbitMqConfig.HostName?.ToString(),
+                Port = Convert.ToInt32(rabbitMqConfig.Port),
+                UserName = rabbitMqConfig.UserName?.ToString() ?? "guest",
+                Password = rabbitMqConfig.Password?.ToString() ?? "guest",
                 RequestedHeartbeat = TimeSpan.FromSeconds(60),
                 AutomaticRecoveryEnabled = true,
-                NetworkRecoveryInterval = TimeSpan.FromSeconds(10)
+                NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
+                RequestedConnectionTimeout = TimeSpan.FromSeconds(30)
             };
 
             _logger.LogInformation($"Tentando conectar ao RabbitMQ em {factory.HostName}:{factory.Port}");
 
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
+            var retryCount = 5;
+            var retryInterval = TimeSpan.FromSeconds(5);
 
-            // Declarar as filas para garantir que existam
-            _channel.QueueDeclare(QUEUE_NAME_DOCTOR, durable: true, exclusive: false, autoDelete: false);
-            _channel.QueueDeclare(QUEUE_NAME_PATIENT, durable: true, exclusive: false, autoDelete: false);
+            for (int i = 0; i < retryCount; i++)
+            {
+                try
+                {
+                    _connection = factory.CreateConnection();
+                    _channel = _connection.CreateModel();
 
-            _logger.LogInformation("Conexão com RabbitMQ estabelecida com sucesso");
+                    // Declarar as filas para garantir que existam
+                    _channel.QueueDeclare(QUEUE_NAME_DOCTOR, durable: true, exclusive: false, autoDelete: false);
+                    _channel.QueueDeclare(QUEUE_NAME_PATIENT, durable: true, exclusive: false, autoDelete: false);
+
+                    _logger.LogInformation("Conexão com RabbitMQ estabelecida com sucesso");
+                    break;
+                }
+                catch (Exception ex) when (i < retryCount - 1)
+                {
+                    _logger.LogWarning($"Tentativa {i + 1} de {retryCount} falhou. Erro: {ex.Message}");
+                    Thread.Sleep(retryInterval);
+                }
+            }
+
+            if (_connection == null || _channel == null)
+            {
+                throw new Exception("Não foi possível estabelecer conexão com o RabbitMQ após várias tentativas");
+            }
         }
         catch (Exception ex)
         {

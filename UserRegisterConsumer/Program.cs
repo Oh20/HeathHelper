@@ -15,6 +15,7 @@ builder.Services.AddSingleton<UserRegistrationConsumer>(sp =>
 {
     var dbContext = sp.GetRequiredService<ApplicationDbContext>();
     var logger = sp.GetRequiredService<ILogger<UserRegistrationConsumer>>();
+
     return new UserRegistrationConsumer(rabbitMqConfig, dbContext, logger);
 });
 
