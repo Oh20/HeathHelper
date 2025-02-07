@@ -6,6 +6,17 @@ data:
   ASPNETCORE_ENVIRONMENT: "Production"
   RabbitMQ__HostName: "rabbitmq-service"
   RabbitMQ__Port: "5672"
-  ConsumerServiceUrl: "http://consumer-service"
-  UserServiceUrl: "http://user-service"
-
+  UserServiceUrl: "http://user-register-consumer-service"
+  ConsumerServiceUrl: "http://scheduler-consumer-service"
+  AuthServiceUrl: "http://auth-service"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: healthhelper-secrets
+type: Opaque
+stringData:
+  ConnectionStrings__DefaultConnection: "Server=localhost;Database=HealthHelper;User Id=sa;Password=YourPassword123!;TrustServerCertificate=True"
+  RabbitMQ__UserName: "guest"
+  RabbitMQ__Password: "guest"
+  Jwt__Secret: "MinhaChaveSecreta123!"

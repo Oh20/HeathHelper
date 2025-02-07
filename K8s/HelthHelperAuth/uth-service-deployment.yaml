@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appointment-scheduler
+  name: auth-service
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: appointment-scheduler
+      app: auth-service
   template:
     metadata:
       labels:
-        app: appointment-scheduler
+        app: auth-service
     spec:
       containers:
-      - name: appointment-scheduler
-        image: oh20/healthhelperproducer:latest
+      - name: auth-service
+        image: oh20/healthhelperauthsystem:latest
         envFrom:
         - configMapRef:
             name: healthhelper-config
@@ -24,10 +24,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: appointment-scheduler-service
+  name: auth-service
 spec:
   selector:
-    app: appointment-scheduler
+    app: auth-service
   ports:
     - port: 80
       targetPort: 80

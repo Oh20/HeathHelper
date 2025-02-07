@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appointment-scheduler
+  name: user-register-consumer
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: appointment-scheduler
+      app: user-register-consumer
   template:
     metadata:
       labels:
-        app: appointment-scheduler
+        app: user-register-consumer
     spec:
       containers:
-      - name: appointment-scheduler
-        image: oh20/healthhelperproducer:latest
+      - name: user-register-consumer
+        image: oh20/userregisterconsumer:latest
         envFrom:
         - configMapRef:
             name: healthhelper-config
@@ -24,11 +24,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: appointment-scheduler-service
+  name: user-register-consumer-service
 spec:
   selector:
-    app: appointment-scheduler
+    app: user-register-consumer
   ports:
     - port: 80
       targetPort: 80
-  type: LoadBalancer
+  type: ClusterIP
