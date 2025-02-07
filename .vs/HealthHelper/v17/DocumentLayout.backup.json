@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{5617BB1B-E898-4341-8E10-A6F71584A7AB}|AppoitmentScheduler\\appoitmentscheduler.csproj|c:\\users\\oh20t\\source\\healthcareinc\\medicoservice\\appoitmentscheduler\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{5617BB1B-E898-4341-8E10-A6F71584A7AB}|AppoitmentScheduler\\appoitmentscheduler.csproj|solutionrelative:appoitmentscheduler\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 197,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -23,19 +18,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Dockerfile",
-              "DocumentMoniker": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\appoitmentscheduler\\Dockerfile",
-              "RelativeDocumentMoniker": "appoitmentscheduler\\Dockerfile",
-              "ToolTip": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\appoitmentscheduler\\Dockerfile",
-              "RelativeToolTip": "appoitmentscheduler\\Dockerfile",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-02-07T15:57:38.885Z",
-              "EditorCaption": ""
             }
           ]
         },

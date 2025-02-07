@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HealthHelperAuthSystem")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e76ae0a75e30541a28e06af525e38842f06cdef3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b0245a0233c26bbe9cd7d940ee3594704f7bc28")]
 [assembly: System.Reflection.AssemblyProductAttribute("HealthHelperAuthSystem")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HealthHelperAuthSystem")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
