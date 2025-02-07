@@ -138,6 +138,6 @@ jobs:
           foreach ($SERVICE in $SERVICES) {
             $IMAGE_NAME = "seu-usuario/" + ($SERVICE.ToLower())
             $VERSION = git rev-parse --short HEAD
-            kubectl set image deployment/$SERVICE-deployment $SERVICE-container=$IMAGE_NAME:`${VERSION}
+            kubectl set image deployment/$SERVICE-deployment $SERVICE-container="${IMAGE_NAME}:${VERSION}"
             kubectl rollout status deployment/$SERVICE-deployment
           }
