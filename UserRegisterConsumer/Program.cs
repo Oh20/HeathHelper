@@ -2,11 +2,17 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var rabbitMqHost = Environment.GetEnvironmentVariable("RabbitMQ__HostName");
-var rabbitMqUser = Environment.GetEnvironmentVariable("RabbitMQ__UserName");
-var rabbitMqPass = Environment.GetEnvironmentVariable("RabbitMQ__Password");
+var rabbitMqHost = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "rabbitmq-service";
+var rabbitMqUser = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest";
+var rabbitMqPass = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest";
+var rabbitMqConnectionString = $"amqp://{rabbitMqUser}:{rabbitMqPass}@{rabbitMqHost}:5672/";
 
-var connectionString = $"amqp://{rabbitMqUser}:{rabbitMqPass}@{rabbitMqHost}:5672/";
+builder.Services.AddSingleton<UserRegistrationConsumer>(sp =>
+{
+    var dbContext = sp.GetRequiredService<ApplicationDbContext>();
+    var logger = sp.GetRequiredService<ILogger<UserRegistrationConsumer>>();
+    return new UserRegistrationConsumer(rabbitMqConnectionString, dbContext, logger);
+});
 
 // Configuração do SQL Server
 var dbConnection = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
@@ -18,7 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(dbConnection));
 
 builder.Services.AddHostedService<ConsumerHostedService>();
 

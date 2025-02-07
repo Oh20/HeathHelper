@@ -23,16 +23,27 @@ public class UserRegistrationConsumer : IDisposable
         _dbContext = dbContext;
         _logger = logger;
 
-        var factory = new ConnectionFactory { Uri = new Uri(connectionString) };
-        _connection = factory.CreateConnection();
-        _channel = _connection.CreateModel();
+        _logger.LogInformation($"Tentando conectar ao RabbitMQ com: {connectionString}");
 
-        // Configuração das filas
-        _channel.QueueDeclare(QUEUE_NAME_DOCTOR, durable: true, exclusive: false, autoDelete: false);
-        _channel.QueueDeclare(QUEUE_NAME_PATIENT, durable: true, exclusive: false, autoDelete: false);
-        _channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+        try
+        {
+            var factory = new ConnectionFactory { Uri = new Uri(connectionString) };
+            _connection = factory.CreateConnection();
+            _channel = _connection.CreateModel();
+
+            _logger.LogInformation("Conexão com RabbitMQ estabelecida com sucesso");
+
+            // Configuração das filas
+            _channel.QueueDeclare(QUEUE_NAME_DOCTOR, durable: true, exclusive: false, autoDelete: false);
+            _channel.QueueDeclare(QUEUE_NAME_PATIENT, durable: true, exclusive: false, autoDelete: false);
+            _channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao conectar com RabbitMQ");
+            throw;
+        }
     }
-
     public void StartConsuming()
     {
         // Consumidor para médicos

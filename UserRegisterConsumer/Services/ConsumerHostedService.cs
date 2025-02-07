@@ -10,25 +10,29 @@
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        using var scope = _serviceProvider.CreateScope();
+        var consumer = scope.ServiceProvider.GetRequiredService<UserRegistrationConsumer>();
+
+        try
         {
-            using (var scope = _serviceProvider.CreateScope())
+            consumer.StartConsuming();
+
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<UserRegistrationConsumer>>();
-                var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-                _consumer = new UserRegistrationConsumer(
-                    config.GetConnectionString("RabbitMQ"),
-                    dbContext,
-                    logger
-                );
-
-                _consumer.StartConsuming();
-
-                // Mantém o consumidor ativo
-                await Task.Delay(Timeout.Infinite, stoppingToken);
+                await Task.Delay(1000, stoppingToken);
             }
         }
+        catch (Exception ex)
+        {
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<ConsumerHostedService>>();
+            logger.LogError(ex, "Erro ao executar o consumer");
+            throw;
+        }
+    }
+
+    public override Task StopAsync(CancellationToken cancellationToken)
+    {
+        _consumer?.Dispose();
+        return base.StopAsync(cancellationToken);
     }
 }
