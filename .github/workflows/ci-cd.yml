@@ -33,7 +33,7 @@ jobs:
 
   # Job para o HealthHelperAuthSystem
   build_healthhelperauthsystem:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
