@@ -132,7 +132,6 @@ jobs:
           kubectl config use-context minikube || kubectl config use-context docker-desktop
 
       - name: Deploy to Local Kubernetes
-        shell: bash  # Adicionando a especificação para o shell Bash
         run: |
           SERVICES=(AppoitmentScheduler HealthHelperAuthSystem MedicosService SchedulerConsumer UserRegisterConsumer)
           for SERVICE in "${SERVICES[@]}"; do
