@@ -6,12 +6,6 @@ var rabbitMqHost = Environment.GetEnvironmentVariable("RabbitMQ__HostName");
 var rabbitMqUser = Environment.GetEnvironmentVariable("RabbitMQ__UserName");
 var rabbitMqPass = Environment.GetEnvironmentVariable("RabbitMQ__Password");
 
-
-if (string.IsNullOrEmpty(rabbitMqHost) || string.IsNullOrEmpty(rabbitMqUser) || string.IsNullOrEmpty(rabbitMqPass))
-{
-    throw new ArgumentNullException("RabbitMQ connection details are missing");
-}
-
 var connectionString = $"amqp://{rabbitMqUser}:{rabbitMqPass}@{rabbitMqHost}:5672/";
 
 // Configuração do SQL Server
