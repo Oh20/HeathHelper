@@ -3,5 +3,7 @@ kind: ConfigMap
 metadata:
   name: healthhelper-config
 data:
-  RabbitMQ__HostName: "rabbitmq-service"  # Este é o nome do serviço do RabbitMQ no K8s
+  RabbitMQ__HostName: "rabbitmq-service"
   RabbitMQ__Port: "5672"
+  RabbitMQ__UserName: "guest"
+  RabbitMQ__Password: "guest"

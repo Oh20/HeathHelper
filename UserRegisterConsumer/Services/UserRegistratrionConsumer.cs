@@ -16,7 +16,7 @@ public class UserRegistrationConsumer : IDisposable
     private const string QUEUE_NAME_PATIENT = "patient-registration";
 
     public UserRegistrationConsumer(
-        string connectionString,
+        dynamic rabbitMqConfig,
         ApplicationDbContext dbContext,
         ILogger<UserRegistrationConsumer> logger)
     {
@@ -27,11 +27,13 @@ public class UserRegistrationConsumer : IDisposable
         {
             var factory = new ConnectionFactory
             {
-                HostName = "rabbitmq-service",  // Nome do serviço no K8s
-                Port = 5672,
-                UserName = "guest",
-                Password = "guest",
-                RequestedConnectionTimeout = TimeSpan.FromSeconds(30)
+                HostName = rabbitMqConfig.HostName,
+                Port = rabbitMqConfig.Port,
+                UserName = rabbitMqConfig.UserName,
+                Password = rabbitMqConfig.Password,
+                RequestedHeartbeat = TimeSpan.FromSeconds(60),
+                AutomaticRecoveryEnabled = true,
+                NetworkRecoveryInterval = TimeSpan.FromSeconds(10)
             };
 
             _logger.LogInformation($"Tentando conectar ao RabbitMQ em {factory.HostName}:{factory.Port}");
@@ -39,8 +41,11 @@ public class UserRegistrationConsumer : IDisposable
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
 
+            // Declarar as filas para garantir que existam
+            _channel.QueueDeclare(QUEUE_NAME_DOCTOR, durable: true, exclusive: false, autoDelete: false);
+            _channel.QueueDeclare(QUEUE_NAME_PATIENT, durable: true, exclusive: false, autoDelete: false);
+
             _logger.LogInformation("Conexão com RabbitMQ estabelecida com sucesso");
-            // ... resto do código
         }
         catch (Exception ex)
         {

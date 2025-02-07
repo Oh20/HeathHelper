@@ -1,17 +1,21 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var rabbitMqHost = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "rabbitmq-service";
-var rabbitMqUser = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest";
-var rabbitMqPass = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest";
-var rabbitMqConnectionString = $"amqp://{rabbitMqUser}:{rabbitMqPass}@{rabbitMqHost}:5672/";
+var rabbitMqConfig = new
+{
+    HostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "rabbitmq-service",
+    Port = int.Parse(Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672"),
+    UserName = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest",
+    Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
+};
 
 builder.Services.AddSingleton<UserRegistrationConsumer>(sp =>
 {
     var dbContext = sp.GetRequiredService<ApplicationDbContext>();
     var logger = sp.GetRequiredService<ILogger<UserRegistrationConsumer>>();
-    return new UserRegistrationConsumer(rabbitMqConnectionString, dbContext, logger);
+    return new UserRegistrationConsumer(rabbitMqConfig, dbContext, logger);
 });
 
 // Configuração do SQL Server

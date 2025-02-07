@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{94E29804-C5A7-4640-BC55-69C34A1553EE}|UserRegisterConsumer\\UserRegisterConsumer.csproj|c:\\users\\oh20t\\source\\healthcareinc\\medicoservice\\userregisterconsumer\\services\\userregistratrionconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94E29804-C5A7-4640-BC55-69C34A1553EE}|UserRegisterConsumer\\UserRegisterConsumer.csproj|solutionrelative:userregisterconsumer\\services\\userregistratrionconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{94E29804-C5A7-4640-BC55-69C34A1553EE}|UserRegisterConsumer\\UserRegisterConsumer.csproj|c:\\users\\oh20t\\source\\healthcareinc\\medicoservice\\userregisterconsumer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{94E29804-C5A7-4640-BC55-69C34A1553EE}|UserRegisterConsumer\\UserRegisterConsumer.csproj|solutionrelative:userregisterconsumer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94E29804-C5A7-4640-BC55-69C34A1553EE}|UserRegisterConsumer\\UserRegisterConsumer.csproj|c:\\users\\oh20t\\source\\healthcareinc\\medicoservice\\userregisterconsumer\\services\\userregistratrionconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94E29804-C5A7-4640-BC55-69C34A1553EE}|UserRegisterConsumer\\UserRegisterConsumer.csproj|solutionrelative:userregisterconsumer\\services\\userregistratrionconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 212,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -27,37 +27,12 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UserRegistratrionConsumer.cs",
-              "DocumentMoniker": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
-              "RelativeDocumentMoniker": "UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
-              "ToolTip": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
-              "RelativeToolTip": "UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAADAAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-07T23:04:53.167Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Program.cs",
-              "RelativeDocumentMoniker": "UserRegisterConsumer\\Program.cs",
-              "ToolTip": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Program.cs",
-              "RelativeToolTip": "UserRegisterConsumer\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-07T22:09:29.881Z"
             }
           ]
         },
         {
-          "DockedWidth": 182,
-          "SelectedChildIndex": -1,
+          "DockedWidth": 186,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -74,6 +49,32 @@
             {
               "$type": "Bookmark",
               "Name": "ST:8:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserRegistratrionConsumer.cs",
+              "DocumentMoniker": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
+              "RelativeDocumentMoniker": "UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
+              "ToolTip": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
+              "RelativeToolTip": "UserRegisterConsumer\\Services\\UserRegistratrionConsumer.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAkwDYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T23:41:33.991Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Program.cs",
+              "RelativeDocumentMoniker": "UserRegisterConsumer\\Program.cs",
+              "ToolTip": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\UserRegisterConsumer\\Program.cs",
+              "RelativeToolTip": "UserRegisterConsumer\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T23:40:40.209Z",
+              "EditorCaption": ""
             }
           ]
         },

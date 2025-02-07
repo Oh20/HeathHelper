@@ -14,9 +14,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\HealthHelperDTOs.csproj",
-      "projectName": "HealthHelperDTOs",
-      "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\HealthHelperDTOs.csproj",
+      "projectUniqueName": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj",
+      "projectName": "Health&MedDTOs",
+      "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj",
       "packagesPath": "C:\\Users\\Oh20T\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\obj\\",
       "projectStyle": "PackageReference",
