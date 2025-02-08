@@ -155,26 +155,31 @@ jobs:
           $SERVICES = @(
             @{
               Name="HelHelperUser-Consumer"; 
+              DeploymentName="user-register-consumer";
               DeploymentFiles=@("user-register-consumer-deployment.yaml");
               Dir="HelHelperUser"
             },
             @{
               Name="HelHelperUser-Producer"; 
+              DeploymentName="user-register-producer";
               DeploymentFiles=@("user-register-producer-deployment.yaml");
               Dir="HelHelperUser"
             },
             @{
               Name="HelthHelperAuth"; 
+              DeploymentName="auth-service";
               DeploymentFiles=@("auth-service-deployment.yaml");
               Dir="HelthHelperAuth"
             },
             @{
               Name="HelthHelperConsumer"; 
+              DeploymentName="helth-helper-consumer";
               DeploymentFiles=@("HelthHelperConsumer.yaml");
               Dir="HelthHelperConsumer"
             },
             @{
               Name="HelthHelperProducer"; 
+              DeploymentName="helth-helper-producer";
               DeploymentFiles=@("HelthHelperProducer.yaml");
               Dir="HelthHelperProducer"
             }
@@ -191,6 +196,7 @@ jobs:
           # Processar cada serviço
           foreach ($SERVICE in $SERVICES) {
             $serviceName = $SERVICE.Name
+            $deploymentName = $SERVICE.DeploymentName
             $serviceDir = $SERVICE.Dir
             
             Safe-Log "Deploying $serviceName..."
@@ -224,31 +230,34 @@ jobs:
                 }
               }
               
-              # Verificar deployment
-              Safe-Log "Checking deployments for $serviceName..."
+              # Verificar deployment diretamente
+              Safe-Log "Waiting for $deploymentName deployment rollout..."
               
-              $deploymentFound = $false
-              $SERVICE.DeploymentFiles | ForEach-Object {
-                $deploymentName = [System.IO.Path]::GetFileNameWithoutExtension($_)
+              $timeout = 300
+              $startTime = Get-Date
+              
+              while ($true) {
+                $deployment = kubectl get deployment "$deploymentName" `
+                  -n "$NAMESPACE" `
+                  -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
                 
-                try {
-                  $rolloutStatus = kubectl rollout status deployment/"$deploymentName" `
-                    -n "$NAMESPACE" `
-                    --timeout=300s `
-                    2>&1
-                  
-                  if ($?) {
-                    $deploymentFound = $true
-                    Safe-Log "Deployment $deploymentName rollout successful"
-                  }
+                $readyReplicas = kubectl get deployment "$deploymentName" `
+                  -n "$NAMESPACE" `
+                  -o jsonpath='{.status.readyReplicas}'
+                
+                if ($deployment -eq "True" -and $readyReplicas -gt 0) {
+                  Safe-Log "Deployment $deploymentName is ready with $readyReplicas replicas"
+                  break
                 }
-                catch {
-                  Safe-Log "No deployment found for $deploymentName"
+                
+                # Verificar timeout
+                $elapsedTime = (Get-Date) - $startTime
+                if ($elapsedTime.TotalSeconds -gt $timeout) {
+                  throw "Deployment $deploymentName timed out after $timeout seconds"
                 }
-              }
-              
-              if (-not $deploymentFound) {
-                throw "No deployments found for $serviceName"
+                
+                # Pequeno delay para evitar sobrecarga
+                Start-Sleep -Seconds 5
               }
               
               Safe-Log "$serviceName deployment successful"
@@ -263,6 +272,10 @@ jobs:
               Safe-Log "Pods status:"
               kubectl get pods -n "$NAMESPACE"
               
+              # Detalhes específicos do deployment com problema
+              Safe-Log "Detailed deployment status for $deploymentName:"
+              kubectl describe deployment "$deploymentName" -n "$NAMESPACE"
+              
               exit 1
             }
           }
@@ -272,23 +285,35 @@ jobs:
         shell: pwsh
         run: |
           $SERVICES = @(
-            "user-register-consumer-deployment",
-            "user-register-producer-deployment",
-            "auth-service-deployment",
-            "HelthHelperConsumer",
-            "HelthHelperProducer"
+            "user-register-consumer",
+            "user-register-producer",
+            "auth-service",
+            "helth-helper-consumer",
+            "helth-helper-producer"
           )
           $NAMESPACE = "default"
 
           foreach ($DEPLOYMENT in $SERVICES) {
             Safe-Log "Verifying $DEPLOYMENT..."
             
-            $replicas = kubectl get deployment "$DEPLOYMENT" `
+            $readyReplicas = kubectl get deployment "$DEPLOYMENT" `
+              -n "$NAMESPACE" `
+              -o jsonpath='{.status.readyReplicas}'
+            
+            $availableReplicas = kubectl get deployment "$DEPLOYMENT" `
               -n "$NAMESPACE" `
               -o jsonpath='{.status.availableReplicas}'
             
-            if ($replicas -lt 1) {
-              Write-Error "Deployment $DEPLOYMENT does not have any available replicas"
+            if ($readyReplicas -lt 1 -or $availableReplicas -lt 1) {
+              Write-Error "Deployment $DEPLOYMENT does not have any ready or available replicas"
+              
+              # Logs de diagnóstico adicionais
+              Safe-Log "Deployment details:"
+              kubectl describe deployment "$DEPLOYMENT" -n "$NAMESPACE"
+              
+              Safe-Log "Pod status:"
+              kubectl get pods -l app="$DEPLOYMENT" -n "$NAMESPACE"
+              
               exit 1
             }
             
