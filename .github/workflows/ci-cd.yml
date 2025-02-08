@@ -141,28 +141,45 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $VERSION = "${{ steps.get_version.outputs.VERSION }}"
-          $NAMESPACE = "${env:NAMESPACE}"
           
-          # Função para aplicar configurações de um diretório
-          function Apply-KubernetesConfigurations {
-            param (
+          # Definir variáveis com aspas para evitar problemas de parsing
+          $VERSION = "${{ steps.get_version.outputs.VERSION }}"
+          $NAMESPACE = "default"
+          
+          # Função para logar com segurança
+          function Safe-Log {
+            param(
+              [string]$Message
+            )
+            
+            if ($Message) {
+              try {
+                Write-Host $Message
+              }
+              catch {
+                # Fallback logging se Write-Host falhar
+                [Console]::WriteLine($Message)
+              }
+            }
+          }
+          
+          # Função para aplicar configurações
+          function Apply-KubernetesConfig {
+            param(
               [string]$Path
             )
             
             if (Test-Path $Path) {
-              Write-Host "Applying configurations from $Path..."
+              Safe-Log "Applying configurations from $Path..."
               kubectl apply -f $Path
             }
           }
           
-          # Aplicar configurações do RabbitMQ
-          Apply-KubernetesConfigurations -Path "k8s/RabbitMQ"
-          
           # Aplicar configurações base
-          Apply-KubernetesConfigurations -Path "k8s/config"
+          Apply-KubernetesConfig -Path "k8s/RabbitMQ"
+          Apply-KubernetesConfig -Path "k8s/config"
           
-          # Array com os serviços e seus diretórios
+          # Definir serviços
           $SERVICES = @(
             @{Name="HelHelperUser"; Dir="HelHelperUser"},
             @{Name="HelthHelperAuth"; Dir="HelthHelperAuth"},
@@ -170,102 +187,98 @@ jobs:
             @{Name="HelthHelperProducer"; Dir="HelthHelperProducer"}
           )
           
+          # Função para processar logs
+          function Get-ServiceLogs {
+            param(
+              [string]$ServiceName,
+              [string]$Namespace
+            )
+            
+            # Usar formato de comando direto para evitar interpolação
+            $podList = kubectl get pods -l "app=$ServiceName" -n "$Namespace" -o name
+            
+            foreach ($podResource in $podList) {
+              # Remover prefixo 'pod/' se existir
+              $currentPod = $podResource -replace '^pod/',''.Trim()
+              
+              Safe-Log ("Retrieving logs for pod: " + $currentPod)
+              
+              try {
+                $logOutput = kubectl logs "$currentPod" -n "$Namespace" --tail=50 2>&1
+                
+                if ($logOutput) {
+                  Safe-Log ("Logs for " + $currentPod + ":")
+                  $logOutput | ForEach-Object { 
+                    if ($_) { Safe-Log $_ }
+                  }
+                }
+                else {
+                  Safe-Log ("No logs found for pod: " + $currentPod)
+                }
+              }
+              catch {
+                Safe-Log ("Error retrieving logs for pod: " + $currentPod + ". Error: " + $_.Exception.Message)
+              }
+            }
+          }
+          
+          # Processar cada serviço
           foreach ($SERVICE in $SERVICES) {
             $serviceName = $SERVICE.Name
             $serviceDir = $SERVICE.Dir
             
-            Write-Host "Deploying $serviceName..."
+            Safe-Log "Deploying $serviceName..."
             
             try {
-              # Verificar se o diretório k8s existe para o serviço
               $k8sPath = "k8s/$serviceDir"
               if (-not (Test-Path $k8sPath)) {
-                Write-Warning "K8s directory not found for $serviceName at $k8sPath"
+                Safe-Log "K8s directory not found for $serviceName at $k8sPath"
                 continue
               }
               
-              # Função para atualizar e aplicar arquivos YAML
-              function Update-AndApplyYaml {
-                param (
-                  [string]$FilePath,
-                  [string]$Version
-                )
+              # Processar arquivos YAML
+              Get-ChildItem $k8sPath -Filter *.yaml | ForEach-Object {
+                $content = Get-Content $_.FullName -Raw
+                $updatedContent = $content -replace '(:latest|:v\d+\.\d+\.\d+|:[a-f0-9]+)', ":$VERSION"
+                $updatedContent | Set-Content $_.FullName
                 
-                $content = Get-Content $FilePath -Raw
-                $updatedContent = $content -replace '(:latest|:v\d+\.\d+\.\d+|:[a-f0-9]+)', ":$Version"
-                $updatedContent | Set-Content $FilePath
-                
-                Write-Host "Applying $(Split-Path $FilePath -Leaf)..."
-                kubectl apply -f $FilePath
+                Safe-Log ("Applying " + $_.Name)
+                kubectl apply -f $_.FullName
                 
                 if (-not $?) {
-                  throw "Failed to apply $(Split-Path $FilePath -Leaf)"
+                  throw "Failed to apply $($_.Name)"
                 }
-              }
-              
-              # Atualizar e aplicar todos os YAMLs no diretório do serviço
-              Get-ChildItem $k8sPath -Filter *.yaml | ForEach-Object {
-                Update-AndApplyYaml -FilePath $_.FullName -Version $VERSION
               }
               
               # Verificar deployment
               $deploymentName = "$serviceName-deployment"
-              Write-Host "Waiting for $deploymentName rollout..."
+              Safe-Log "Waiting for $deploymentName rollout..."
               
-              kubectl rollout status deployment/$deploymentName `
-                -n $NAMESPACE `
+              kubectl rollout status deployment/"$deploymentName" `
+                -n "$NAMESPACE" `
                 --timeout=300s
               
               if (-not $?) {
                 throw "Deployment rollout failed"
               }
               
-              Write-Host "$serviceName deployment successful"
+              # Obter logs do serviço
+              Get-ServiceLogs -ServiceName $serviceName -Namespace $NAMESPACE
+              
+              Safe-Log "$serviceName deployment successful"
             }
             catch {
-              Write-Error "Failed to deploy $serviceName`: $_"
+              Safe-Log "Deployment error for $serviceName`: $($_.Exception.Message)"
               
-              # Logs para diagnóstico
-              Write-Host "Deployment status:"
-              kubectl get deployments -l app=$serviceName -n $NAMESPACE
+              # Logs de diagnóstico
+              Safe-Log "Deployment status:"
+              kubectl get deployments -l app="$serviceName" -n "$NAMESPACE"
               
-              Write-Host "Pods status:"
-              kubectl get pods -l app=$serviceName -n $NAMESPACE
+              Safe-Log "Pods status:"
+              kubectl get pods -l app="$serviceName" -n "$NAMESPACE"
               
-              # Função para obter logs dos pods
-              function Get-PodLogs {
-                param (
-                  [string]$ServiceName,
-                  [string]$Namespace
-                )
-                
-                $pods = kubectl get pods -l app=$ServiceName -n $Namespace -o name
-                
-                foreach ($podResource in $pods) {
-                  # Remover o prefixo 'pod/' se existir
-                  $podName = $podResource -replace '^pod/', ''
-                  
-                  Write-Host "Attempting to retrieve logs for pod: $podName"
-                  
-                  try {
-                    $logOutput = kubectl logs $podName -n $Namespace --tail=50 2>&1
-                    
-                    if ($logOutput) {
-                      Write-Host "Logs for $podName:"
-                      $logOutput | ForEach-Object { Write-Host $_ }
-                    }
-                    else {
-                      Write-Warning "No logs found for pod: $podName"
-                    }
-                  }
-                  catch {
-                    Write-Warning "Could not retrieve logs for pod: $podName. Error: $_"
-                  }
-                }
-              }
-              
-              # Chamar função para obter logs
-              Get-PodLogs -ServiceName $serviceName -Namespace $NAMESPACE
+              # Obter logs detalhados em caso de erro
+              Get-ServiceLogs -ServiceName $serviceName -Namespace $NAMESPACE
               
               exit 1
             }
@@ -277,18 +290,17 @@ jobs:
         run: |
           $SERVICES = @(
             "HelHelperUser",
-            "HelthHelperAuth",
+            "HelthHelperAuth", 
             "HelthHelperConsumer",
             "HelthHelperProducer"
           )
-          $NAMESPACE = "${env:NAMESPACE}"
+          $NAMESPACE = "default"
 
           foreach ($SERVICE in $SERVICES) {
-            Write-Host "Verifying $SERVICE..."
+            Safe-Log "Verifying $SERVICE..."
             
-            # Verificar status do deployment
             $deployment = kubectl get deployment "$SERVICE-deployment" `
-              -n $NAMESPACE `
+              -n "$NAMESPACE" `
               -o jsonpath='{.status.availableReplicas}'
             
             if ($deployment -lt 1) {
@@ -296,5 +308,5 @@ jobs:
               exit 1
             }
             
-            Write-Host "$SERVICE verification completed successfully"
+            Safe-Log "$SERVICE verification completed successfully"
           }
