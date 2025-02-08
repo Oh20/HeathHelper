@@ -8,3 +8,4 @@ data:
   RabbitMQ__UserName: "guest"
   RabbitMQ__Password: "guest"
   UserServiceUrl: "http://user-register-consumer-service.default.svc.cluster.local"
+  ConsumerServiceUrl: "http://scheduler-consumer-service.default.svc.cluster.local"

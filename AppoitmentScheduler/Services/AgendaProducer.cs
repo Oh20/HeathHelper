@@ -8,7 +8,6 @@ public class AgendaProducer : IDisposable
     private readonly IModel _channel;
     private readonly ILogger<AgendaProducer> _logger;
 
-    // Filas para diferentes operações
     private const string QUEUE_NAME_SLOTS = "agenda-slots";
     private const string QUEUE_NAME_UPDATE = "agenda-update";
     private const string QUEUE_NAME_CONSULTA = "consulta-nova";
@@ -16,14 +15,58 @@ public class AgendaProducer : IDisposable
     private const string QUEUE_NAME_CONSULTA_QUERY = "consulta-query";
     private const string QUEUE_NAME_SLOTS_QUERY = "slots-query";
 
-    public AgendaProducer(string connectionString, ILogger<AgendaProducer> logger)
+    public AgendaProducer(RabbitMQConfig rabbitConfig, ILogger<AgendaProducer> logger)
     {
         _logger = logger;
-        var factory = new ConnectionFactory { Uri = new Uri(connectionString) };
-        _connection = factory.CreateConnection();
-        _channel = _connection.CreateModel();
 
-        // Declarar todas as filas
+        try
+        {
+            var factory = new ConnectionFactory
+            {
+                HostName = rabbitConfig.HostName,
+                Port = rabbitConfig.Port,
+                UserName = rabbitConfig.UserName,
+                Password = rabbitConfig.Password,
+                RequestedHeartbeat = TimeSpan.FromSeconds(60),
+                AutomaticRecoveryEnabled = true,
+                NetworkRecoveryInterval = TimeSpan.FromSeconds(10)
+            };
+
+            _logger.LogInformation($"Tentando conectar ao RabbitMQ em {factory.HostName}:{factory.Port}");
+
+            var retryCount = 5;
+            for (int i = 0; i < retryCount; i++)
+            {
+                try
+                {
+                    _connection = factory.CreateConnection();
+                    _channel = _connection.CreateModel();
+
+                    ConfigureQueues();
+                    _logger.LogInformation("Conexão com RabbitMQ estabelecida com sucesso");
+                    break;
+                }
+                catch (Exception ex) when (i < retryCount - 1)
+                {
+                    _logger.LogWarning($"Tentativa {i + 1} de {retryCount} falhou. Erro: {ex.Message}");
+                    Thread.Sleep(TimeSpan.FromSeconds(5 * (i + 1))); // Backoff exponencial
+                }
+            }
+
+            if (_connection == null || _channel == null)
+            {
+                throw new Exception("Não foi possível estabelecer conexão com o RabbitMQ após várias tentativas");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao conectar com RabbitMQ");
+            throw;
+        }
+    }
+
+    private void ConfigureQueues()
+    {
         _channel.QueueDeclare(QUEUE_NAME_SLOTS, durable: true, exclusive: false, autoDelete: false);
         _channel.QueueDeclare(QUEUE_NAME_UPDATE, durable: true, exclusive: false, autoDelete: false);
         _channel.QueueDeclare(QUEUE_NAME_CONSULTA, durable: true, exclusive: false, autoDelete: false);

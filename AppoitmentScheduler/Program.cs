@@ -1,16 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurações do RabbitMQ para conexão
-var rabbitMQHostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "localhost";
-var rabbitMQPort = Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672";
-var rabbitMQUser = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest";
-var rabbitMQPassword = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest";
+var rabbitConfig = new RabbitMQConfig
+{
+    HostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "localhost",
+    Port = int.Parse(Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672"),
+    UserName = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest",
+    Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
+};
 
-var rabbitMQConnectionString = $"amqp://{rabbitMQUser}:{rabbitMQPassword}@{rabbitMQHostName}:{rabbitMQPort}";
-
-// Configuração do Consumer Service
 var consumerServiceUrl = Environment.GetEnvironmentVariable("ConsumerServiceUrl")
-   ?? builder.Configuration["ConsumerServiceUrl"];
+    ?? builder.Configuration["ConsumerServiceUrl"]
+    ?? "http://scheduler-consumer-service";
 
 // Registro de Serviços
 builder.Services.AddControllers();
@@ -18,10 +18,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configuração do AgendaProducer
-builder.Services.AddSingleton(sp =>
+builder.Services.AddSingleton(rabbitConfig);
+builder.Services.AddSingleton<AgendaProducer>(sp =>
 {
     var logger = sp.GetRequiredService<ILogger<AgendaProducer>>();
-    return new AgendaProducer(rabbitMQConnectionString, logger);
+    return new AgendaProducer(rabbitConfig, logger);
 });
 
 // Configuração do HttpClient

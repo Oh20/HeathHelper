@@ -3,7 +3,6 @@ using static AgendaConsumer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurações do RabbitMQ
 var rabbitConfig = new RabbitMQConfig
 {
     HostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "localhost",
@@ -12,9 +11,9 @@ var rabbitConfig = new RabbitMQConfig
     Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
 };
 
-var userServiceUrl = Environment.GetEnvironmentVariable("UserServiceUrl")
-    ?? builder.Configuration["UserServiceUrl"]
-    ?? "http://user-register-consumer-service";
+var consumerServiceUrl = Environment.GetEnvironmentVariable("ConsumerServiceUrl")
+    ?? builder.Configuration["ConsumerServiceUrl"]
+    ?? "http://scheduler-consumer-service";
 
 builder.Services.AddSingleton(rabbitConfig);
 
