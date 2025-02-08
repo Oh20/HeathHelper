@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: healthhelper-config
 data:
-  RabbitMQ__HostName: "rabbitmq-service"
+  RabbitMQ__HostName: "10.100.131.92"
   RabbitMQ__Port: "5672"
   RabbitMQ__UserName: "guest"
   RabbitMQ__Password: "guest"

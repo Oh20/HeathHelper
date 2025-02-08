@@ -6,11 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 var rabbitMqConfig = new
 {
     HostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "rabbitmq-service",
-    Port = int.Parse(Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672"),
+    Port = Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672",
     UserName = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest",
     Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
 };
-
 builder.Services.AddSingleton<UserRegistrationConsumer>(sp =>
 {
     var dbContext = sp.GetRequiredService<ApplicationDbContext>();
