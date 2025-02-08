@@ -12,18 +12,32 @@ var rabbitConfig = new RabbitMQConfig
     Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
 };
 
+var userServiceUrl = Environment.GetEnvironmentVariable("UserServiceUrl")
+    ?? builder.Configuration["UserServiceUrl"]
+    ?? "http://user-register-consumer-service";
+
 builder.Services.AddSingleton(rabbitConfig);
 
-builder.Services.AddSingleton<AgendaConsumer>();
+builder.Services.AddSingleton<AgendaConsumer>(sp =>
+{
+    var logger = sp.GetRequiredService<ILogger<AgendaConsumer>>();
+    var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+    var serviceProvider = sp;
+
+    return new AgendaConsumer(
+        rabbitConfig,
+        serviceProvider,
+        logger,
+        httpClientFactory,
+        userServiceUrl
+    );
+});
+
 builder.Services.AddHostedService<AgendaConsumerService>();
 
 // Configuração do SQL Server
 var dbConnection = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
     ?? builder.Configuration.GetConnectionString("DefaultConnection");
-
-// Configuração do User Service
-var userServiceUrl = Environment.GetEnvironmentVariable("UserServiceUrl")
-    ?? builder.Configuration["UserServiceUrl"];
 
 // Registro de Serviços
 builder.Services.AddControllers();

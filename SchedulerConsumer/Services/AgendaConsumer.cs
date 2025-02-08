@@ -20,19 +20,12 @@ public class AgendaConsumer : IDisposable
     private const string QUEUE_NAME_CONSULTA = "consulta-nova";
     private const string QUEUE_NAME_CONSULTA_UPDATE = "consulta-update";
 
-    public class RabbitMQConfig
-    {
-        public string HostName { get; set; }
-        public int Port { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-    }
     public AgendaConsumer(
-        RabbitMQConfig rabbitConfig,
-        IServiceProvider serviceProvider,
-        ILogger<AgendaConsumer> logger,
-        IHttpClientFactory httpClientFactory,
-        string userServiceUrl)
+    RabbitMQConfig rabbitConfig,
+    IServiceProvider serviceProvider,
+    ILogger<AgendaConsumer> logger,
+    IHttpClientFactory httpClientFactory,
+    string userServiceUrl)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -66,10 +59,10 @@ public class AgendaConsumer : IDisposable
                     _logger.LogInformation("Conexão com RabbitMQ estabelecida com sucesso");
                     break;
                 }
-                catch (Exception ex) when (i < retryCount - 1)
+                catch (Exception ex)
                 {
-                    _logger.LogWarning($"Tentativa {i + 1} de {retryCount} falhou. Erro: {ex.Message}");
-                    Thread.Sleep(TimeSpan.FromSeconds(5 * (i + 1))); // Backoff exponencial
+                    _logger.LogError(ex, "Erro ao conectar com RabbitMQ");
+                    throw;
                 }
             }
 

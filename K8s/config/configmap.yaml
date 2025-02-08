@@ -7,4 +7,4 @@ data:
   RabbitMQ__Port: "5672"
   RabbitMQ__UserName: "guest"
   RabbitMQ__Password: "guest"
-  UserServiceUrl: "http://user-service"
+  UserServiceUrl: "http://user-register-consumer-service.default.svc.cluster.local"
