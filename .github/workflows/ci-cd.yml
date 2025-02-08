@@ -246,30 +246,3 @@ jobs:
               continue
             }
           }
-
-      - name: Verify Deployments
-        if: success()
-        shell: pwsh
-        continue-on-error: true  # Permite continuar mesmo com falhas na verificação
-        run: |
-          $SERVICES = @(
-            "user-register-consumer",
-            "user-register-producer",
-            "auth-service",
-            "helth-helper-consumer",
-            "helth-helper-producer"
-          )
-          $NAMESPACE = "default"
-
-          foreach ($DEPLOYMENT in $SERVICES) {
-            Write-Host "Checking $DEPLOYMENT..."
-            
-            try {
-              $status = kubectl get deployment $DEPLOYMENT -n $NAMESPACE -o jsonpath="{.status.conditions[?(@.type=='Available')].status}"
-              Write-Host "$DEPLOYMENT status: $status"
-            }
-            catch {
-              Write-Warning "Could not verify $DEPLOYMENT: $_"
-              continue
-            }
-          }
