@@ -142,6 +142,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $VERSION = "${{ steps.get_version.outputs.VERSION }}"
+          $NAMESPACE = "default"  # Explicitly set namespace
           
           # Aplicar configurações do RabbitMQ primeiro (se existir)
           if (Test-Path "k8s/RabbitMQ") {
@@ -196,7 +197,7 @@ jobs:
               Write-Host "Waiting for $deploymentName rollout..."
               
               kubectl rollout status deployment/$deploymentName `
-                -n ${{ env.NAMESPACE }} `
+                -n $NAMESPACE `
                 --timeout=300s
               
               if (-not $?) {
@@ -210,16 +211,21 @@ jobs:
               
               # Logs para diagnóstico
               Write-Host "Deployment status:"
-              kubectl get deployments -l app=$serviceName -n ${{ env.NAMESPACE }}
+              kubectl get deployments -l app=$serviceName -n $NAMESPACE
               
               Write-Host "Pods status:"
-              kubectl get pods -l app=$serviceName -n ${{ env.NAMESPACE }}
+              kubectl get pods -l app=$serviceName -n $NAMESPACE
               
               # Obter logs dos pods
-              $pods = kubectl get pods -l app=$serviceName -n ${{ env.NAMESPACE }} -o name
-              foreach ($pod in $pods) {
-                  Write-Host "Logs for $pod:"
-                  kubectl logs $pod -n $env:NAMESPACE --tail=50
+              $pods = kubectl get pods -l app=$serviceName -n $NAMESPACE -o name
+              foreach ($podName in $pods) {
+                Write-Host "Logs for $podName:"
+                try {
+                  kubectl logs $podName -n $NAMESPACE --tail=50
+                }
+                catch {
+                  Write-Warning "Could not retrieve logs for pod: $podName"
+                }
               }
               
               exit 1
@@ -236,13 +242,14 @@ jobs:
             "HelthHelperConsumer",
             "HelthHelperProducer"
           )
+          $NAMESPACE = "default"  # Explicitly set namespace
 
           foreach ($SERVICE in $SERVICES) {
             Write-Host "Verifying $SERVICE..."
             
             # Verificar status do deployment
             $deployment = kubectl get deployment "$SERVICE-deployment" `
-              -n ${{ env.NAMESPACE }} `
+              -n $NAMESPACE `
               -o jsonpath='{.status.availableReplicas}'
             
             if ($deployment -lt 1) {
