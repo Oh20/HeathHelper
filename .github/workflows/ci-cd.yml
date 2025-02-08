@@ -218,8 +218,8 @@ jobs:
               # Obter logs dos pods
               $pods = kubectl get pods -l app=$serviceName -n ${{ env.NAMESPACE }} -o name
               foreach ($pod in $pods) {
-                Write-Host "Logs for $pod:"
-                kubectl logs $pod -n ${{ env.NAMESPACE }} --tail=50
+                  Write-Host "Logs for $pod:"
+                  kubectl logs $pod -n $env:NAMESPACE --tail=50
               }
               
               exit 1
