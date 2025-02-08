@@ -176,7 +176,7 @@ jobs:
             }
             catch {
               Safe-Log "Error running kubectl $Arguments`: $($_.Exception.Message)"
-              if (-not $SuppressErrors) {
+              if (-not $SuppressErrors) { 
                 throw
               }
             }
