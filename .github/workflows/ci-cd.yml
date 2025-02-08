@@ -11,7 +11,7 @@ on:
 jobs:
   # Job para o AppoitmentScheduler
   build_appointmentscheduler:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
 
   # Job para o HealthHelperAuthSystem
   build_healthhelperauthsystem:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -55,7 +55,7 @@ jobs:
 
   # Job para o MedicosService
   build_medicosservice:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -77,7 +77,7 @@ jobs:
 
   # Job para o SchedulerConsumer
   build_schedulerconsumer:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -99,7 +99,7 @@ jobs:
 
   # Job para o UserRegisterConsumer
   build_userregisterconsumer:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

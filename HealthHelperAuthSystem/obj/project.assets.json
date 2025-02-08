@@ -47,15 +47,6 @@
           }
         }
       },
-      "HealthHelperDTOs/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/HealthHelperDTOs.dll": {}
-        },
-        "runtime": {
-          "lib/net8.0/HealthHelperDTOs.dll": {}
-        }
-      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.0": {
         "type": "package",
         "dependencies": {
@@ -1115,18 +1106,6 @@
         "azureicon.png",
         "lib/netstandard2.0/Azure.Identity.dll",
         "lib/netstandard2.0/Azure.Identity.xml"
-      ]
-    },
-    "HealthHelperDTOs/1.0.0": {
-      "sha512": "SEBM6HrdDeFYADT49LItkFk/ZNdNhKzDQ3a8Rh+1EXsBI2jv1of19pFeKiJExc8TprsgR2DeKq2dw5dj7t6KIg==",
-      "type": "package",
-      "path": "healthhelperdtos/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "healthhelperdtos.1.0.0.nupkg.sha512",
-        "healthhelperdtos.nuspec",
-        "lib/net8.0/HealthHelperDTOs.dll"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.0": {
@@ -3066,8 +3045,6 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj",
-      "HealthHelperDTOs >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.0",
       "Microsoft.EntityFrameworkCore >= 9.0.1",
       "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.1",
@@ -3108,11 +3085,7 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {
-            "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj": {
-              "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -3131,10 +3104,6 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
-          "HealthHelperDTOs": {
-            "target": "Package",
-            "version": "[1.0.0, )"
-          },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
             "version": "[8.0.0, )"
@@ -3184,15 +3153,6 @@
     }
   },
   "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Não é possível encontrar o projeto 'C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj'. Verifique se a referência do projeto é válida e se o arquivo de projeto existe.",
-      "libraryId": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    },
     {
       "code": "NU1902",
       "level": "Warning",

@@ -3,6 +3,7 @@ using static AgendaConsumer;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuração do RabbitMQ
 var rabbitConfig = new RabbitMQConfig
 {
     HostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "localhost",
@@ -11,12 +12,24 @@ var rabbitConfig = new RabbitMQConfig
     Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
 };
 
-var consumerServiceUrl = Environment.GetEnvironmentVariable("ConsumerServiceUrl")
-    ?? builder.Configuration["ConsumerServiceUrl"]
-    ?? "http://scheduler-consumer-service";
+// Configuração de serviços externos
+var userServiceUrl = Environment.GetEnvironmentVariable("UserServiceUrl")
+    ?? builder.Configuration["UserServiceUrl"]
+    ?? "http://localhost:5001";  // Porta do UserRegisterConsumer
+
+// Configuração do HttpClient
+builder.Services.AddHttpClient("UserService", client =>
+{
+    client.BaseAddress = new Uri(userServiceUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
+
+// Configuração do banco de dados
+var dbConnection = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddSingleton(rabbitConfig);
-
 builder.Services.AddSingleton<AgendaConsumer>(sp =>
 {
     var logger = sp.GetRequiredService<ILogger<AgendaConsumer>>();
@@ -32,39 +45,21 @@ builder.Services.AddSingleton<AgendaConsumer>(sp =>
     );
 });
 
-builder.Services.AddHostedService<AgendaConsumerService>();
+// Configuração do DbContext
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(dbConnection));
 
-// Configuração do SQL Server
-var dbConnection = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-    ?? builder.Configuration.GetConnectionString("DefaultConnection");
-
-// Registro de Serviços
+// Configuração de serviços
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHostedService<AgendaConsumerService>();
 
 // Configuração do HttpClient
 builder.Services.AddHttpClient("UserService", client =>
 {
     client.BaseAddress = new Uri(userServiceUrl);
 });
-
-// Configuração do DbContext
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        dbConnection,
-        sqlServerOptionsAction: sqlOptions =>
-        {
-            sqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(30),
-                errorNumbersToAdd: null);
-        }
-    ),
-    ServiceLifetime.Transient
-);
-
-builder.Services.AddHostedService<AgendaConsumerService>();
 
 // Configuração de Logging
 builder.Services.AddLogging(logging =>

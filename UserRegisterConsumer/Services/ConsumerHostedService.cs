@@ -1,38 +1,35 @@
-﻿public class ConsumerHostedService : BackgroundService
+﻿public class ConsumerHostedService : IHostedService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private UserRegistrationConsumer _consumer;
+    private readonly UserRegistrationConsumer _consumer;
+    private readonly ILogger<ConsumerHostedService> _logger;
 
-    public ConsumerHostedService(IServiceProvider serviceProvider)
+    public ConsumerHostedService(
+        UserRegistrationConsumer consumer,
+        ILogger<ConsumerHostedService> logger)
     {
-        _serviceProvider = serviceProvider;
+        _consumer = consumer;
+        _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var consumer = scope.ServiceProvider.GetRequiredService<UserRegistrationConsumer>();
-
         try
         {
-            consumer.StartConsuming();
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await Task.Delay(1000, stoppingToken);
-            }
+            _logger.LogInformation("Iniciando Consumer Service");
+            _consumer.StartConsuming();
+            return Task.CompletedTask;
         }
         catch (Exception ex)
         {
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<ConsumerHostedService>>();
-            logger.LogError(ex, "Erro ao executar o consumer");
+            _logger.LogError(ex, "Erro ao iniciar o Consumer Service");
             throw;
         }
     }
 
-    public override Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken)
     {
-        _consumer?.Dispose();
-        return base.StopAsync(cancellationToken);
+        _logger.LogInformation("Parando Consumer Service");
+        _consumer.Dispose();
+        return Task.CompletedTask;
     }
 }

@@ -2,17 +2,23 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Adiciona suporte a Controllers e Swagger
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // Configuração do RabbitMQ
 builder.Services.AddSingleton(sp =>
     new RabbitMQPublisher(builder.Configuration.GetConnectionString("RabbitMQ")));
-
 builder.Services.AddScoped<DoctorService>();
 
 var app = builder.Build();
 
+// Habilita o Swagger
+app.UseSwagger();
+app.UseSwaggerUI();
 
-// Endpoint de registro do Médico
-
+// Endpoints
 app.MapPost("/register-doctor", async (
     [FromBody] DoctorRegistrationDto doctorDto,
     RabbitMQPublisher publisher) =>
@@ -24,8 +30,6 @@ app.MapPost("/register-doctor", async (
         Message = "Solicitação de registro enviada com sucesso"
     });
 });
-
-// Endpoint de registro do Paciente
 
 app.MapPost("/register-patient", async (
     [FromBody] PatientRegistrationDto patientDto,

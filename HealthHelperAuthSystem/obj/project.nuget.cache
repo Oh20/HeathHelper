@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "+hHTycdCqQc=",
-  "success": false,
+  "dgSpecHash": "GEGN0QJc5w0=",
+  "success": true,
   "projectFilePath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\HealthHelperAuthSystem\\HealthHelperAuthSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Oh20T\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
-    "C:\\Users\\Oh20T\\.nuget\\packages\\healthhelperdtos\\1.0.0\\healthhelperdtos.1.0.0.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.0\\microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.6\\microsoft.data.sqlclient.5.1.6.nupkg.sha512",
@@ -66,15 +65,6 @@
     "C:\\Users\\Oh20T\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
   "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Não é possível encontrar o projeto 'C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj'. Verifique se a referência do projeto é válida e se o arquivo de projeto existe.",
-      "libraryId": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    },
     {
       "code": "NU1902",
       "level": "Warning",

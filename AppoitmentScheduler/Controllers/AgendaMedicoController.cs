@@ -181,6 +181,7 @@ public class ConsultaController : ControllerBase
     }
 }
 
+
 [ApiController]
 [Route("api/pacientes")]
 public class PacienteController : ControllerBase
@@ -201,19 +202,47 @@ public class PacienteController : ControllerBase
     {
         try
         {
-            var response = await _httpClient.GetAsync($"/api/pacientes/{pacienteId}/consultas");
+            _logger.LogInformation($"Iniciando busca de consultas para paciente {pacienteId}");
+            _logger.LogInformation($"Base URL: {_httpClient.BaseAddress}");
+
+            // Adiciona mais detalhes de log para diagnóstico
+            var fullUrl = $"{_httpClient.BaseAddress}api/pacientes/{pacienteId}/consultas";
+            _logger.LogInformation($"Tentando acessar URL: {fullUrl}");
+
+            var response = await _httpClient.GetAsync($"api/pacientes/{pacienteId}/consultas");
+
+            _logger.LogInformation($"Resposta recebida. Status Code: {response.StatusCode}");
+
             if (response.IsSuccessStatusCode)
             {
                 var consultas = await response.Content.ReadFromJsonAsync<List<ConsultaDto>>();
                 return Ok(consultas);
             }
 
+            // Log detalhado em caso de falha
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogWarning($"Erro na requisição. Status: {response.StatusCode}, Conteúdo: {errorContent}");
+
             return StatusCode((int)response.StatusCode, "Erro ao buscar consultas");
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, $"Erro de conexão ao buscar consultas do paciente {pacienteId}");
+            return StatusCode(500, new
+            {
+                Message = "Erro de comunicação com o serviço de consultas",
+                Details = ex.Message
+            });
+        }
+        catch (TaskCanceledException ex)
+        {
+            _logger.LogError(ex, $"Tempo limite excedido ao buscar consultas do paciente {pacienteId}");
+            return StatusCode(504, "O serviço de consultas não respondeu a tempo");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao listar consultas do paciente");
-            return StatusCode(500, "Erro ao processar a requisição");
+            _logger.LogError(ex, $"Erro inesperado ao listar consultas do paciente {pacienteId}");
+            return StatusCode(500, "Erro interno ao processar a requisição");
         }
     }
 }

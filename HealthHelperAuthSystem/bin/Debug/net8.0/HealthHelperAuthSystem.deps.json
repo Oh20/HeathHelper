@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v8.0": {
       "HealthHelperAuthSystem/1.0.0": {
         "dependencies": {
-          "Health&MedDTOs": "1.0.0",
+          "HealthHelperDTOs": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.0",
           "Microsoft.EntityFrameworkCore": "9.0.1",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.1",
@@ -52,6 +52,14 @@
           "lib/netstandard2.0/Azure.Identity.dll": {
             "assemblyVersion": "1.11.4.0",
             "fileVersion": "1.1100.424.31005"
+          }
+        }
+      },
+      "HealthHelperDTOs/1.0.0": {
+        "runtime": {
+          "lib/net8.0/HealthHelperDTOs.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -657,14 +665,6 @@
             "fileVersion": "6.0.21.52210"
           }
         }
-      },
-      "Health&MedDTOs/1.0.0": {
-        "runtime": {
-          "Health&MedDTOs.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
       }
     }
   },
@@ -687,6 +687,13 @@
       "sha512": "sha512-Sf4BoE6Q3jTgFkgBkx7qztYOFELBCo+wQgpYDwal/qJ1unBH73ywPztIJKXBXORRzAeNijsuxhk94h0TIMvfYg==",
       "path": "azure.identity/1.11.4",
       "hashPath": "azure.identity.1.11.4.nupkg.sha512"
+    },
+    "HealthHelperDTOs/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SEBM6HrdDeFYADT49LItkFk/ZNdNhKzDQ3a8Rh+1EXsBI2jv1of19pFeKiJExc8TprsgR2DeKq2dw5dj7t6KIg==",
+      "path": "healthhelperdtos/1.0.0",
+      "hashPath": "healthhelperdtos.1.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.0": {
       "type": "package",
@@ -1086,11 +1093,6 @@
       "sha512": "sha512-IXoJOXIqc39AIe+CIR7koBtRGMiCt/LPM3lI+PELtDIy9XdyeSrwXFdWV9dzJ2Awl0paLWUaknLxFQ5HpHZUog==",
       "path": "system.windows.extensions/6.0.0",
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
-    },
-    "Health&MedDTOs/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

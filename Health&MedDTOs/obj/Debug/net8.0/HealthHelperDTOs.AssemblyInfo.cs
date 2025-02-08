@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HealthHelperDTOs")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c36f8afdbc4279ad8be3f1e3aa92967af555c139")]
 [assembly: System.Reflection.AssemblyProductAttribute("HealthHelperDTOs")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HealthHelperDTOs")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

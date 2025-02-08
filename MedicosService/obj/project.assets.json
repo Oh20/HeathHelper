@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net8.0": {
+      "HealthHelperDTOs/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/HealthHelperDTOs.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/HealthHelperDTOs.dll": {}
+        }
+      },
       "Microsoft.EntityFrameworkCore/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -352,20 +361,22 @@
         "build": {
           "buildTransitive/net6.0/_._": {}
         }
-      },
-      "HealthHelperDTOs/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/HealthHelperDTOs.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/HealthHelperDTOs.dll": {}
-        }
       }
     }
   },
   "libraries": {
+    "HealthHelperDTOs/1.0.0": {
+      "sha512": "SEBM6HrdDeFYADT49LItkFk/ZNdNhKzDQ3a8Rh+1EXsBI2jv1of19pFeKiJExc8TprsgR2DeKq2dw5dj7t6KIg==",
+      "type": "package",
+      "path": "healthhelperdtos/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "healthhelperdtos.1.0.0.nupkg.sha512",
+        "healthhelperdtos.nuspec",
+        "lib/net8.0/HealthHelperDTOs.dll"
+      ]
+    },
     "Microsoft.EntityFrameworkCore/9.0.1": {
       "sha512": "E25w4XugXNykTr5Y/sLDGaQ4lf67n9aXVPvsdGsIZjtuLmbvb9AoYP8D50CDejY8Ro4D9GK2kNHz5lWHqSK+wg==",
       "type": "package",
@@ -1228,11 +1239,6 @@
         "system.threading.channels.nuspec",
         "useSharedDesignerContext.txt"
       ]
-    },
-    "HealthHelperDTOs/1.0.0": {
-      "type": "project",
-      "path": "../Health&MedDTOs/HealthHelperDTOs.csproj",
-      "msbuildProject": "../Health&MedDTOs/HealthHelperDTOs.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1276,11 +1282,7 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {
-            "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\HealthHelperDTOs.csproj": {
-              "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\HealthHelperDTOs.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

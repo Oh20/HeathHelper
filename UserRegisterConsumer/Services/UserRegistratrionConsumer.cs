@@ -1,75 +1,47 @@
-﻿
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Identity;
-using RabbitMQ.Client;
+﻿// UserRegistrationConsumer.cs
 using RabbitMQ.Client.Events;
-using System.Text;
+using RabbitMQ.Client;
 using System.Text.Json;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 public class UserRegistrationConsumer : IDisposable
 {
     private readonly IConnection _connection;
     private readonly IModel _channel;
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<UserRegistrationConsumer> _logger;
     private const string QUEUE_NAME_DOCTOR = "doctor-registration";
     private const string QUEUE_NAME_PATIENT = "patient-registration";
+    private bool _disposed;
 
     public UserRegistrationConsumer(
-        dynamic rabbitMqConfig,
-        ApplicationDbContext dbContext,
+        RabbitMQConfig rabbitConfig,
+        IServiceProvider serviceProvider,
         ILogger<UserRegistrationConsumer> logger)
     {
-        _dbContext = dbContext;
+        _serviceProvider = serviceProvider;
         _logger = logger;
 
         try
         {
-            // Log das configurações recebidas
-            _logger.LogInformation($"Configurações RabbitMQ - Host: {rabbitMqConfig.HostName}, Porta: {rabbitMqConfig.Port}");
-
             var factory = new ConnectionFactory
             {
-                HostName = rabbitMqConfig.HostName?.ToString(),
-                Port = Convert.ToInt32(rabbitMqConfig.Port),
-                UserName = rabbitMqConfig.UserName?.ToString() ?? "guest",
-                Password = rabbitMqConfig.Password?.ToString() ?? "guest",
+                HostName = rabbitConfig.HostName,
+                Port = rabbitConfig.Port,
+                UserName = rabbitConfig.UserName,
+                Password = rabbitConfig.Password,
                 RequestedHeartbeat = TimeSpan.FromSeconds(60),
                 AutomaticRecoveryEnabled = true,
-                NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
-                RequestedConnectionTimeout = TimeSpan.FromSeconds(30)
+                NetworkRecoveryInterval = TimeSpan.FromSeconds(10)
             };
 
-            _logger.LogInformation($"Tentando conectar ao RabbitMQ em {factory.HostName}:{factory.Port}");
+            _connection = factory.CreateConnection();
+            _channel = _connection.CreateModel();
 
-            var retryCount = 5;
-            var retryInterval = TimeSpan.FromSeconds(5);
-
-            for (int i = 0; i < retryCount; i++)
-            {
-                try
-                {
-                    _connection = factory.CreateConnection();
-                    _channel = _connection.CreateModel();
-
-                    // Declarar as filas para garantir que existam
-                    _channel.QueueDeclare(QUEUE_NAME_DOCTOR, durable: true, exclusive: false, autoDelete: false);
-                    _channel.QueueDeclare(QUEUE_NAME_PATIENT, durable: true, exclusive: false, autoDelete: false);
-
-                    _logger.LogInformation("Conexão com RabbitMQ estabelecida com sucesso");
-                    break;
-                }
-                catch (Exception ex) when (i < retryCount - 1)
-                {
-                    _logger.LogWarning($"Tentativa {i + 1} de {retryCount} falhou. Erro: {ex.Message}");
-                    Thread.Sleep(retryInterval);
-                }
-            }
-
-            if (_connection == null || _channel == null)
-            {
-                throw new Exception("Não foi possível estabelecer conexão com o RabbitMQ após várias tentativas");
-            }
+            _channel.QueueDeclare(QUEUE_NAME_DOCTOR, durable: true, exclusive: false, autoDelete: false);
+            _channel.QueueDeclare(QUEUE_NAME_PATIENT, durable: true, exclusive: false, autoDelete: false);
+            _channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
         }
         catch (Exception ex)
         {
@@ -77,23 +49,23 @@ public class UserRegistrationConsumer : IDisposable
             throw;
         }
     }
+
     public void StartConsuming()
     {
-        // Consumidor para médicos
         var doctorConsumer = new EventingBasicConsumer(_channel);
-        doctorConsumer.Received += async (model, ea) =>
+        doctorConsumer.Received += (model, ea) =>
         {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
             try
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 var doctorDto = JsonSerializer.Deserialize<DoctorRegistrationDto>(message);
 
-                var passwordHasher = new PasswordHasher<Medico>();
-
                 var medico = new Medico
                 {
-
                     CPF = doctorDto.CPF,
                     Nome = doctorDto.Nome,
                     Email = doctorDto.Email,
@@ -103,11 +75,11 @@ public class UserRegistrationConsumer : IDisposable
                     Ativo = true
                 };
 
+                var passwordHasher = new PasswordHasher<Medico>();
                 medico.Senha = passwordHasher.HashPassword(medico, doctorDto.Senha);
 
-
-                await _dbContext.Medicos.AddAsync(medico);
-                await _dbContext.SaveChangesAsync();
+                dbContext.Medicos.Add(medico);
+                dbContext.SaveChanges();
 
                 _channel.BasicAck(ea.DeliveryTag, multiple: false);
                 _logger.LogInformation($"Médico registrado com sucesso: {medico.Email}");
@@ -119,17 +91,17 @@ public class UserRegistrationConsumer : IDisposable
             }
         };
 
-        // Consumidor para pacientes
         var patientConsumer = new EventingBasicConsumer(_channel);
-        patientConsumer.Received += async (model, ea) =>
+        patientConsumer.Received += (model, ea) =>
         {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
             try
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 var patientDto = JsonSerializer.Deserialize<PatientRegistrationDto>(message);
-
-                var passwordHasher = new PasswordHasher<Paciente>();
 
                 var paciente = new Paciente
                 {
@@ -142,11 +114,12 @@ public class UserRegistrationConsumer : IDisposable
                     NumeroConvenio = patientDto.NumeroConvenio,
                     Ativo = true
                 };
+
+                var passwordHasher = new PasswordHasher<Paciente>();
                 paciente.Senha = passwordHasher.HashPassword(paciente, patientDto.Senha);
 
-
-                await _dbContext.Pacientes.AddAsync(paciente);
-                await _dbContext.SaveChangesAsync();
+                dbContext.Pacientes.Add(paciente);
+                dbContext.SaveChanges();
 
                 _channel.BasicAck(ea.DeliveryTag, multiple: false);
                 _logger.LogInformation($"Paciente registrado com sucesso: {paciente.Email}");
@@ -164,7 +137,12 @@ public class UserRegistrationConsumer : IDisposable
 
     public void Dispose()
     {
+        if (_disposed) return;
+
+        _disposed = true;
         _channel?.Close();
+        _channel?.Dispose();
         _connection?.Close();
+        _connection?.Dispose();
     }
 }

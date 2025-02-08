@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class ApplicationDbContext : DbContext
 {
@@ -8,9 +7,8 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<Medico> Medicos { get; set; }
-    public DbSet<Paciente> Pacientes { get; set; }
-
+    public DbSet<Medico> Medicos { get; set; } = null!; 
+    public DbSet<Paciente> Pacientes { get; set; } = null!;
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Medico>(entity =>

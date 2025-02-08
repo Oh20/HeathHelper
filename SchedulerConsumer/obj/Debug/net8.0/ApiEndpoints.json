@@ -1,6 +1,6 @@
 [
   {
-    "ContainingType": "MedicoController",
+    "ContainingType": "SchedulerConsumer.Controllers.MedicoController",
     "Method": "ListarConsultasMedico",
     "RelativePath": "api/medicos/{medicoId}/consultas",
     "HttpMethod": "GET",
@@ -16,7 +16,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PacienteController",
+    "ContainingType": "SchedulerConsumer.Controllers.PacienteController",
     "Method": "ListarConsultasPaciente",
     "RelativePath": "api/pacientes/{pacienteId}/consultas",
     "HttpMethod": "GET",
@@ -32,9 +32,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "SlotController",
+    "ContainingType": "SchedulerConsumer.Controllers.SlotController",
     "Method": "GetSlotsDisponiveis",
-    "RelativePath": "api/slots/slots/disponiveis",
+    "RelativePath": "api/slots/disponiveis",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -64,7 +64,7 @@
   },
   {
     "ContainingType": "Program\u002B\u003C\u003Ec",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_4",
+    "Method": "\u003C\u003CMain\u003E$\u003Eb__0_5",
     "RelativePath": "health",
     "HttpMethod": "GET",
     "IsController": false,

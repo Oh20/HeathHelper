@@ -1,79 +1,36 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 var builder = WebApplication.CreateBuilder(args);
 
-var rabbitConfig = new RabbitMQConfig
-{
-    HostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "localhost",
-    Port = int.Parse(Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672"),
-    UserName = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest",
-    Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
-};
+// Configuração de Logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(80);
-});
+// Configuração de URLs e RabbitMQ
+builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(5065));
+var rabbitConfig = builder.Configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>() ?? new RabbitMQConfig();
+var consumerServiceUrl = builder.Configuration["ConsumerServiceUrl"] ?? "http://localhost:5065";
 
-// Ou alternativamente, use variáveis de ambiente
-builder.WebHost.UseKestrel()
-    .UseUrls("http://*:80");
-
-var consumerServiceUrl = Environment.GetEnvironmentVariable("ConsumerServiceUrl")
-    ?? builder.Configuration["ConsumerServiceUrl"]
-    ?? "http://scheduler-consumer-service";
+// Configuração de HttpClient
+builder.Services.AddHttpClient("ConsumerService", client => client.BaseAddress = new Uri(consumerServiceUrl));
 
 // Registro de Serviços
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// Configuração do AgendaProducer
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.WriteIndented = true);
 builder.Services.AddSingleton(rabbitConfig);
-builder.Services.AddSingleton<AgendaProducer>(sp =>
-{
-    var logger = sp.GetRequiredService<ILogger<AgendaProducer>>();
-    return new AgendaProducer(rabbitConfig, logger);
-});
-
-// Configuração do HttpClient
-builder.Services.AddHttpClient("ConsumerService", client =>
-{
-    client.BaseAddress = new Uri(consumerServiceUrl);
-    client.Timeout = TimeSpan.FromSeconds(30);
-});
-
-// Configuração de Logging
-builder.Services.AddLogging(logging =>
-{
-    logging.AddConsole();
-    logging.AddDebug();
-    logging.SetMinimumLevel(LogLevel.Information);
-});
+builder.Services.AddSingleton<AgendaProducer>();
 
 var app = builder.Build();
 
-// Middleware Pipeline
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthorization();
-
-// Health Check endpoint
-app.MapGet("/health", () => Results.Ok(new { Status = "Healthy" }));
-
-// Mapear controllers
 app.MapControllers();
 
-try
-{
-    app.Logger.LogInformation("Iniciando aplicação Producer");
-    app.Run();
-}
-catch (Exception ex)
-{
-    app.Logger.LogCritical(ex, "Aplicação Producer falhou ao iniciar");
-    throw;
-}
+app.Run();

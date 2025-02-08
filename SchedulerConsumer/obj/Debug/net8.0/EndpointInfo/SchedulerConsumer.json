@@ -63,7 +63,7 @@
         }
       }
     },
-    "/api/slots/slots/disponiveis": {
+    "/api/slots/disponiveis": {
       "get": {
         "tags": [
           "Slot"
