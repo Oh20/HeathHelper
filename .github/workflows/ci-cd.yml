@@ -168,15 +168,38 @@ jobs:
             }
           }
           
-          $SERVICES = @(
-            @{
-              Name="HelHelperUser-Consumer"
-              DeploymentName="user-register-consumer"
-              DeploymentFiles=@("user-register-consumer-deployment.yaml")
-              Dir="HelHelperUser"
-            },
-            # ... outros serviços ...
-          )
+            $SERVICES = @(
+                @{
+                    Name="HelHelperUser-Consumer"; 
+                    DeploymentName="user-register-consumer";
+                    DeploymentFiles=@("user-register-consumer-deployment.yaml");
+                    Dir="HelHelperUser"
+                },
+                @{
+                    Name="HelHelperUser-Producer"; 
+                    DeploymentName="user-register-producer";
+                    DeploymentFiles=@("user-register-producer-deployment.yaml");
+                    Dir="HelHelperUser"
+                },
+                @{
+                    Name="HelthHelperAuth"; 
+                    DeploymentName="auth-service";
+                    DeploymentFiles=@("auth-service-deployment.yaml");
+                    Dir="HelthHelperAuth"
+                },
+                @{
+                    Name="HelthHelperConsumer"; 
+                    DeploymentName="helth-helper-consumer";
+                    DeploymentFiles=@("HelthHelperConsumer.yaml");
+                    Dir="HelthHelperConsumer"
+                },
+                @{
+                    Name="HelthHelperProducer"; 
+                    DeploymentName="helth-helper-producer";
+                    DeploymentFiles=@("HelthHelperProducer.yaml");
+                    Dir="HelthHelperProducer"
+                }
+            )
           
           @("k8s/RabbitMQ", "k8s/config") | ForEach-Object {
             if (Test-Path $_) {
