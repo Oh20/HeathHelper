@@ -142,19 +142,25 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $VERSION = "${{ steps.get_version.outputs.VERSION }}"
-          $NAMESPACE = "default"  # Explicitly set namespace
+          $NAMESPACE = "${env:NAMESPACE}"
           
-          # Aplicar configurações do RabbitMQ primeiro (se existir)
-          if (Test-Path "k8s/RabbitMQ") {
-            Write-Host "Applying RabbitMQ configurations..."
-            kubectl apply -f k8s/RabbitMQ/
+          # Função para aplicar configurações de um diretório
+          function Apply-KubernetesConfigurations {
+            param (
+              [string]$Path
+            )
+            
+            if (Test-Path $Path) {
+              Write-Host "Applying configurations from $Path..."
+              kubectl apply -f $Path
+            }
           }
           
-          # Aplicar outras configurações base (se existirem)
-          if (Test-Path "k8s/config") {
-            Write-Host "Applying base configurations..."
-            kubectl apply -f k8s/config/
-          }
+          # Aplicar configurações do RabbitMQ
+          Apply-KubernetesConfigurations -Path "k8s/RabbitMQ"
+          
+          # Aplicar configurações base
+          Apply-KubernetesConfigurations -Path "k8s/config"
           
           # Array com os serviços e seus diretórios
           $SERVICES = @(
@@ -178,18 +184,28 @@ jobs:
                 continue
               }
               
-              # Atualizar a tag da imagem nos arquivos YAML
-              Get-ChildItem $k8sPath -Filter *.yaml | ForEach-Object {
-                $content = Get-Content $_.FullName -Raw
-                $updatedContent = $content -replace '(:latest|:v\d+\.\d+\.\d+|:[a-f0-9]+)', ":$VERSION"
-                $updatedContent | Set-Content $_.FullName
+              # Função para atualizar e aplicar arquivos YAML
+              function Update-AndApplyYaml {
+                param (
+                  [string]$FilePath,
+                  [string]$Version
+                )
                 
-                Write-Host "Applying $($_.Name)..."
-                kubectl apply -f $_.FullName
+                $content = Get-Content $FilePath -Raw
+                $updatedContent = $content -replace '(:latest|:v\d+\.\d+\.\d+|:[a-f0-9]+)', ":$Version"
+                $updatedContent | Set-Content $FilePath
+                
+                Write-Host "Applying $(Split-Path $FilePath -Leaf)..."
+                kubectl apply -f $FilePath
                 
                 if (-not $?) {
-                  throw "Failed to apply $($_.Name)"
+                  throw "Failed to apply $(Split-Path $FilePath -Leaf)"
                 }
+              }
+              
+              # Atualizar e aplicar todos os YAMLs no diretório do serviço
+              Get-ChildItem $k8sPath -Filter *.yaml | ForEach-Object {
+                Update-AndApplyYaml -FilePath $_.FullName -Version $VERSION
               }
               
               # Verificar deployment
@@ -216,17 +232,40 @@ jobs:
               Write-Host "Pods status:"
               kubectl get pods -l app=$serviceName -n $NAMESPACE
               
-              # Obter logs dos pods
-              $pods = kubectl get pods -l app=$serviceName -n $NAMESPACE -o name
-              foreach ($podName in $pods) {
-                Write-Host "Logs for $podName:"
-                try {
-                  kubectl logs $podName -n $NAMESPACE --tail=50
-                }
-                catch {
-                  Write-Warning "Could not retrieve logs for pod: $podName"
+              # Função para obter logs dos pods
+              function Get-PodLogs {
+                param (
+                  [string]$ServiceName,
+                  [string]$Namespace
+                )
+                
+                $pods = kubectl get pods -l app=$ServiceName -n $Namespace -o name
+                
+                foreach ($podResource in $pods) {
+                  # Remover o prefixo 'pod/' se existir
+                  $podName = $podResource -replace '^pod/', ''
+                  
+                  Write-Host "Attempting to retrieve logs for pod: $podName"
+                  
+                  try {
+                    $logOutput = kubectl logs $podName -n $Namespace --tail=50 2>&1
+                    
+                    if ($logOutput) {
+                      Write-Host "Logs for $podName:"
+                      $logOutput | ForEach-Object { Write-Host $_ }
+                    }
+                    else {
+                      Write-Warning "No logs found for pod: $podName"
+                    }
+                  }
+                  catch {
+                    Write-Warning "Could not retrieve logs for pod: $podName. Error: $_"
+                  }
                 }
               }
+              
+              # Chamar função para obter logs
+              Get-PodLogs -ServiceName $serviceName -Namespace $NAMESPACE
               
               exit 1
             }
@@ -242,7 +281,7 @@ jobs:
             "HelthHelperConsumer",
             "HelthHelperProducer"
           )
-          $NAMESPACE = "default"  # Explicitly set namespace
+          $NAMESPACE = "${env:NAMESPACE}"
 
           foreach ($SERVICE in $SERVICES) {
             Write-Host "Verifying $SERVICE..."
