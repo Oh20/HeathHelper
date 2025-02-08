@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "GEGN0QJc5w0=",
+  "dgSpecHash": "o1xdAFu45pg=",
   "success": true,
   "projectFilePath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\HealthHelperAuthSystem\\HealthHelperAuthSystem.csproj",
   "expectedPackageFiles": [
@@ -62,7 +62,8 @@
     "C:\\Users\\Oh20T\\.nuget\\packages\\system.text.encodings.web\\9.0.1\\system.text.encodings.web.9.0.1.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\system.text.json\\9.0.1\\system.text.json.9.0.1.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-    "C:\\Users\\Oh20T\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
+    "C:\\Users\\Oh20T\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Oh20T\\.nuget\\packages\\healthhelperdtos\\1.0.0\\healthhelperdtos.1.0.0.nupkg.sha512"
   ],
   "logs": [
     {
