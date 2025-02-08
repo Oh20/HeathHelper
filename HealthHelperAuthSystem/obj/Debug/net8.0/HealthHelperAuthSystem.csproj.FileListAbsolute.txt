@@ -65,8 +65,6 @@ C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\bin\Deb
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\bin\Debug\net8.0\Health&MedDTOs.dll
-C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\bin\Debug\net8.0\Health&MedDTOs.pdb
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\obj\Debug\net8.0\HealthHelperAuthSystem.csproj.AssemblyReference.cache
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\obj\Debug\net8.0\HealthHelperAuthSystem.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\obj\Debug\net8.0\HealthHelperAuthSystem.AssemblyInfoInputs.cache
@@ -184,3 +182,6 @@ C:\Users\Oh20T\source\ProjetoBackup\HeathHelper\HealthHelperAuthSystem\obj\Debug
 C:\Users\Oh20T\source\ProjetoBackup\HeathHelper\HealthHelperAuthSystem\obj\Debug\net8.0\HealthHe.A6B902ED.Up2Date
 C:\Users\Oh20T\source\ProjetoBackup\HeathHelper\HealthHelperAuthSystem\obj\Debug\net8.0\HealthHelperAuthSystem.genruntimeconfig.cache
 C:\Users\Oh20T\source\ProjetoBackup\HeathHelper\HealthHelperAuthSystem\obj\Debug\net8.0\ref\HealthHelperAuthSystem.dll
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\bin\Debug\net8.0\HealthHelperDTOs.dll
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\bin\Debug\net8.0\HealthHelperDTOs.pdb
+C:\Users\Oh20T\source\HealthCareInc\MedicoService\HealthHelperAuthSystem\obj\Debug\net8.0\HealthHelperAuthSystem.sourcelink.json

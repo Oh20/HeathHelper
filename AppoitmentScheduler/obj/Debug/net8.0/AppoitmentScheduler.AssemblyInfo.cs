@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("appoitmentscheduler")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fbf2f0e05adec9d12a46ca7ea1d82347c7c5b305")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3270fbb168a4a769f4a7c47674477d0b7d2f01e4")]
 [assembly: System.Reflection.AssemblyProductAttribute("appoitmentscheduler")]
 [assembly: System.Reflection.AssemblyTitleAttribute("appoitmentscheduler")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

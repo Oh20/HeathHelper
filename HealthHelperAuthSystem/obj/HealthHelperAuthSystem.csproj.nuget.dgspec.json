@@ -121,6 +121,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "HealthHelperDTOs": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.0, )"
