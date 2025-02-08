@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "Rlv087CvtM4=",
-  "success": true,
+  "dgSpecHash": "xVPGqc/ym6A=",
+  "success": false,
   "projectFilePath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\SchedulerConsumer\\SchedulerConsumer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Oh20T\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
@@ -98,5 +98,15 @@
     "C:\\Users\\Oh20T\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\Oh20T\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Não é possível encontrar o projeto 'C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj'. Verifique se a referência do projeto é válida e se o arquivo de projeto existe.",
+      "libraryId": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

@@ -15,6 +15,30 @@ spec:
       containers:
       - name: appointment-scheduler
         image: oh20/healthhelperproducer:latest
+        ports:
+        - containerPort: 80
+          name: http
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        # Recursos
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
         envFrom:
         - configMapRef:
             name: healthhelper-config
@@ -25,10 +49,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: appointment-scheduler-service
+  labels:
+    app: appointment-scheduler
 spec:
   selector:
     app: appointment-scheduler
   ports:
-    - port: 80
+    - name: http
+      port: 80
       targetPort: 80
+      protocol: TCP
   type: LoadBalancer

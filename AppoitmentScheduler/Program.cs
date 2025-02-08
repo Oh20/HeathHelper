@@ -8,6 +8,15 @@ var rabbitConfig = new RabbitMQConfig
     Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
 };
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(80);
+});
+
+// Ou alternativamente, use variáveis de ambiente
+builder.WebHost.UseKestrel()
+    .UseUrls("http://*:80");
+
 var consumerServiceUrl = Environment.GetEnvironmentVariable("ConsumerServiceUrl")
     ?? builder.Configuration["ConsumerServiceUrl"]
     ?? "http://scheduler-consumer-service";

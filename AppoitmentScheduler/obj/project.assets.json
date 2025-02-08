@@ -146,16 +146,6 @@
         "build": {
           "buildTransitive/net6.0/_._": {}
         }
-      },
-      "Health&MedDTOs/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/Health&MedDTOs.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Health&MedDTOs.dll": {}
-        }
       }
     }
   },
@@ -667,16 +657,11 @@
         "system.threading.channels.nuspec",
         "useSharedDesignerContext.txt"
       ]
-    },
-    "Health&MedDTOs/1.0.0": {
-      "type": "project",
-      "path": "../Health&MedDTOs/Health&MedDTOs.csproj",
-      "msbuildProject": "../Health&MedDTOs/Health&MedDTOs.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Health&MedDTOs >= 1.0.0",
+      "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj",
       "HealthHelperDTOs >= 1.0.0",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.21.0",
       "RabbitMQ.Client >= 6.5.0",
@@ -690,9 +675,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\AppoitmentScheduler.csproj",
-      "projectName": "AppoitmentScheduler",
-      "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\AppoitmentScheduler.csproj",
+      "projectUniqueName": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appoitmentscheduler.csproj",
+      "projectName": "appoitmentscheduler",
+      "projectPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\appoitmentscheduler.csproj",
       "packagesPath": "C:\\Users\\Oh20T\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\AppoitmentScheduler\\obj\\",
       "projectStyle": "PackageReference",
@@ -777,5 +762,16 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Não é possível encontrar o projeto 'C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj'. Verifique se a referência do projeto é válida e se o arquivo de projeto existe.",
+      "libraryId": "C:\\Users\\Oh20T\\source\\HealthCareInc\\MedicoService\\Health&MedDTOs\\Health&MedDTOs.csproj",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
