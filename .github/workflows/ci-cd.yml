@@ -2,16 +2,49 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+
+env:
+  REGISTRY: oh20
+  KUBERNETES_NAMESPACE: default
+  DEPLOYMENT_TIMEOUT: 300s
 
 jobs:
-  # Job para o AppoitmentScheduler
-  build_appointmentscheduler:
+  validate:
     runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Validate directory structure
+        shell: bash
+        run: |
+          SERVICES=("AppoitmentScheduler" "HealthHelperAuthSystem" "MedicosService" "SchedulerConsumer" "UserRegisterConsumer")
+          for SERVICE in "${SERVICES[@]}"; do
+            if [ ! -d "./$SERVICE" ]; then
+              echo "Error: Directory ./$SERVICE not found"
+              exit 1
+            fi
+            if [ ! -f "./$SERVICE/Dockerfile" ]; then
+              echo "Error: Dockerfile not found in ./$SERVICE"
+              exit 1
+            fi
+          done
+
+  build:
+    needs: validate
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        service: [
+          'appoitmentscheduler',
+          'healthhelperauthsystem',
+          'medicosservice',
+          'schedulerconsumer',
+          'userregisterconsumer'
+        ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -22,122 +55,134 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push AppoitmentScheduler Docker Image
-        run: |
-          IMAGE_NAME=oh20/appoitmentscheduler
-          VERSION=$(git rev-parse --short HEAD)
-          docker build -t $IMAGE_NAME:$VERSION ./AppoitmentScheduler
-          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:$VERSION
-          docker push $IMAGE_NAME:latest
+      - name: Get version
+        id: get_version
+        run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-  # Job para o HealthHelperAuthSystem
-  build_healthhelperauthsystem:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Build and push
+        uses: docker/build-push-action@v4
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          context: ./${{ matrix.service }}
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ matrix.service }}:${{ steps.get_version.outputs.VERSION }}
+            ${{ env.REGISTRY }}/${{ matrix.service }}:latest
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ matrix.service }}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ matrix.service }}:buildcache,mode=max
 
-      - name: Build and Push HealthHelperAuthSystem Docker Image
-        run: |
-          IMAGE_NAME=oh20/healthhelperauthsystem
-          VERSION=$(git rev-parse --short HEAD)
-          docker build -t $IMAGE_NAME:$VERSION ./HealthHelperAuthSystem
-          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:$VERSION
-          docker push $IMAGE_NAME:latest
-
-  # Job para o MedicosService
-  build_medicosservice:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push MedicosService Docker Image
-        run: |
-          IMAGE_NAME=oh20/medicosservice
-          VERSION=$(git rev-parse --short HEAD)
-          docker build -t $IMAGE_NAME:$VERSION ./MedicosService
-          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:$VERSION
-          docker push $IMAGE_NAME:latest
-
-  # Job para o SchedulerConsumer
-  build_schedulerconsumer:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push SchedulerConsumer Docker Image
-        run: |
-          IMAGE_NAME=oh20/schedulerconsumer
-          VERSION=$(git rev-parse --short HEAD)
-          docker build -t $IMAGE_NAME:$VERSION ./SchedulerConsumer
-          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:$VERSION
-          docker push $IMAGE_NAME:latest
-
-  # Job para o UserRegisterConsumer
-  build_userregisterconsumer:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push UserRegisterConsumer Docker Image
-        run: |
-          IMAGE_NAME=oh20/userregisterconsumer
-          VERSION=$(git rev-parse --short HEAD)
-          docker build -t $IMAGE_NAME:$VERSION ./UserRegisterConsumer
-          docker tag $IMAGE_NAME:$VERSION $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:$VERSION
-          docker push $IMAGE_NAME:latest
-
-  # Job de deploy
   deploy:
+    needs: build
     runs-on: [self-hosted, windows]
-    needs: [build_appointmentscheduler, build_healthhelperauthsystem, build_medicosservice, build_schedulerconsumer, build_userregisterconsumer]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set Kubernetes Context (Local)
-        run: |
-          kubectl config use-context minikube || kubectl config use-context docker-desktop
-
-      - name: Deploy to Local Kubernetes
+      - name: Get version
+        id: get_version
         shell: pwsh
         run: |
-          $SERVICES = @("AppoitmentScheduler", "HealthHelperAuthSystem", "MedicosService", "SchedulerConsumer", "UserRegisterConsumer")
+          $version = git rev-parse --short HEAD
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Verify Kubernetes Context
+        shell: pwsh
+        run: |
+          try {
+            $context = kubectl config current-context
+            Write-Host "Current context: $context"
+            
+            # Test connection
+            kubectl get nodes
+            if (-not $?) {
+              throw "Failed to connect to Kubernetes cluster"
+            }
+          }
+          catch {
+            Write-Error "Kubernetes context verification failed: $_"
+            exit 1
+          }
+
+      - name: Deploy to Kubernetes
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $VERSION = "${{ steps.get_version.outputs.VERSION }}"
+          $SERVICES = @(
+            "AppoitmentScheduler",
+            "HealthHelperAuthSystem",
+            "MedicosService",
+            "SchedulerConsumer",
+            "UserRegisterConsumer"
+          )
+
           foreach ($SERVICE in $SERVICES) {
-            $IMAGE_NAME = "seu-usuario/" + ($SERVICE.ToLower())
-            $VERSION = git rev-parse --short HEAD
-            kubectl set image deployment/$SERVICE-deployment $SERVICE-container="${IMAGE_NAME}:${VERSION}"
-            kubectl rollout status deployment/$SERVICE-deployment
+            $serviceLower = $SERVICE.ToLower()
+            $deploymentName = "$SERVICE-deployment"
+            $containerName = "$SERVICE-container"
+            
+            Write-Host "Deploying $SERVICE..."
+            
+            try {
+              # Verify deployment exists
+              $deployment = kubectl get deployment $deploymentName -n ${{ env.KUBERNETES_NAMESPACE }} -o json | ConvertFrom-Json
+              
+              # Update image
+              $imageName = "${{ env.REGISTRY }}/$serviceLower`:$VERSION"
+              Write-Host "Updating to image: $imageName"
+              
+              kubectl set image deployment/$deploymentName `
+                $containerName=$imageName `
+                -n ${{ env.KUBERNETES_NAMESPACE }}
+              
+              # Wait for rollout
+              kubectl rollout status deployment/$deploymentName `
+                -n ${{ env.KUBERNETES_NAMESPACE }} `
+                --timeout=${{ env.DEPLOYMENT_TIMEOUT }}
+              
+              Write-Host "$SERVICE deployment successful"
+            }
+            catch {
+              Write-Error "Failed to deploy $SERVICE`: $_"
+              
+              # Get pods status for debugging
+              Write-Host "Pods status for $SERVICE`:"
+              kubectl get pods -l app=$SERVICE -n ${{ env.KUBERNETES_NAMESPACE }}
+              
+              exit 1
+            }
+          }
+
+      - name: Verify Deployments
+        if: success()
+        shell: pwsh
+        run: |
+          $SERVICES = @(
+            "AppoitmentScheduler",
+            "HealthHelperAuthSystem",
+            "MedicosService",
+            "SchedulerConsumer",
+            "UserRegisterConsumer"
+          )
+
+          foreach ($SERVICE in $SERVICES) {
+            Write-Host "Verifying $SERVICE deployment..."
+            
+            # Check deployment status
+            $status = kubectl rollout status deployment/$SERVICE-deployment -n ${{ env.KUBERNETES_NAMESPACE }}
+            if (-not $?) {
+              Write-Error "Deployment verification failed for $SERVICE"
+              exit 1
+            }
+            
+            # Check pod health
+            $pods = kubectl get pods -l app=$SERVICE -n ${{ env.KUBERNETES_NAMESPACE }} -o json | ConvertFrom-Json
+            $pods.items | ForEach-Object {
+              if ($_.status.phase -ne "Running") {
+                Write-Error "Pod $($_.metadata.name) is not running. Status: $($_.status.phase)"
+                exit 1
+              }
+            }
           }
