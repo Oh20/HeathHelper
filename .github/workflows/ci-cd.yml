@@ -142,83 +142,49 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           
-          # Definir variáveis com aspas para evitar problemas de parsing
           $VERSION = "${{ steps.get_version.outputs.VERSION }}"
           $NAMESPACE = "default"
           
           # Função para logar com segurança
           function Safe-Log {
-            param(
-              [string]$Message
-            )
-            
-            if ($Message) {
-              try {
-                Write-Host $Message
-              }
-              catch {
-                # Fallback logging se Write-Host falhar
-                [Console]::WriteLine($Message)
-              }
-            }
+            param([string]$Message)
+            if ($Message) { Write-Host $Message }
           }
           
-          # Função para aplicar configurações
-          function Apply-KubernetesConfig {
-            param(
-              [string]$Path
-            )
-            
-            if (Test-Path $Path) {
-              Safe-Log "Applying configurations from $Path..."
-              kubectl apply -f $Path
-            }
-          }
-          
-          # Aplicar configurações base
-          Apply-KubernetesConfig -Path "k8s/RabbitMQ"
-          Apply-KubernetesConfig -Path "k8s/config"
-          
-          # Definir serviços
+          # Definir serviços com seus nomes de deployment corretos
           $SERVICES = @(
-            @{Name="HelHelperUser"; Dir="HelHelperUser"},
-            @{Name="HelthHelperAuth"; Dir="HelthHelperAuth"},
-            @{Name="HelthHelperConsumer"; Dir="HelthHelperConsumer"},
-            @{Name="HelthHelperProducer"; Dir="HelthHelperProducer"}
+            @{
+              Name="HelHelperUser-Consumer"; 
+              DeploymentFiles=@("user-register-consumer-deployment.yaml");
+              Dir="HelHelperUser"
+            },
+            @{
+              Name="HelHelperUser-Producer"; 
+              DeploymentFiles=@("user-register-producer-deployment.yaml");
+              Dir="HelHelperUser"
+            },
+            @{
+              Name="HelthHelperAuth"; 
+              DeploymentFiles=@("auth-service-deployment.yaml");
+              Dir="HelthHelperAuth"
+            },
+            @{
+              Name="HelthHelperConsumer"; 
+              DeploymentFiles=@("HelthHelperConsumer.yaml");
+              Dir="HelthHelperConsumer"
+            },
+            @{
+              Name="HelthHelperProducer"; 
+              DeploymentFiles=@("HelthHelperProducer.yaml");
+              Dir="HelthHelperProducer"
+            }
           )
           
-          # Função para processar logs
-          function Get-ServiceLogs {
-            param(
-              [string]$ServiceName,
-              [string]$Namespace
-            )
-            
-            # Usar formato de comando direto para evitar interpolação
-            $podList = kubectl get pods -l "app=$ServiceName" -n "$Namespace" -o name
-            
-            foreach ($podResource in $podList) {
-              # Remover prefixo 'pod/' se existir
-              $currentPod = $podResource -replace '^pod/',''.Trim()
-              
-              Safe-Log ("Retrieving logs for pod: " + $currentPod)
-              
-              try {
-                $logOutput = kubectl logs "$currentPod" -n "$Namespace" --tail=50 2>&1
-                
-                if ($logOutput) {
-                  Safe-Log ("Logs for " + $currentPod + ":")
-                  $logOutput | ForEach-Object { 
-                    if ($_) { Safe-Log $_ }
-                  }
-                }
-                else {
-                  Safe-Log ("No logs found for pod: " + $currentPod)
-                }
-              }
-              catch {
-                Safe-Log ("Error retrieving logs for pod: " + $currentPod + ". Error: " + $_.Exception.Message)
-              }
+          # Aplicar configurações base
+          @("k8s/RabbitMQ", "k8s/config") | ForEach-Object {
+            if (Test-Path $_) {
+              Safe-Log "Applying configurations from $_..."
+              kubectl apply -f $_
             }
           }
           
@@ -236,34 +202,54 @@ jobs:
                 continue
               }
               
-              # Processar arquivos YAML
-              Get-ChildItem $k8sPath -Filter *.yaml | ForEach-Object {
-                $content = Get-Content $_.FullName -Raw
-                $updatedContent = $content -replace '(:latest|:v\d+\.\d+\.\d+|:[a-f0-9]+)', ":$VERSION"
-                $updatedContent | Set-Content $_.FullName
+              # Processar arquivos YAML específicos do serviço
+              foreach ($deploymentFile in $SERVICE.DeploymentFiles) {
+                $fullPath = Join-Path $k8sPath $deploymentFile
                 
-                Safe-Log ("Applying " + $_.Name)
-                kubectl apply -f $_.FullName
+                if (-not (Test-Path $fullPath)) {
+                  Safe-Log "Deployment file $deploymentFile not found for $serviceName"
+                  continue
+                }
+                
+                # Ler e atualizar conteúdo do arquivo
+                $content = Get-Content $fullPath -Raw
+                $updatedContent = $content -replace '(:latest|:v\d+\.\d+\.\d+|:[a-f0-9]+)', ":$VERSION"
+                $updatedContent | Set-Content $fullPath
+                
+                Safe-Log ("Applying " + $deploymentFile)
+                kubectl apply -f $fullPath
                 
                 if (-not $?) {
-                  throw "Failed to apply $($_.Name)"
+                  throw "Failed to apply $deploymentFile"
                 }
               }
               
               # Verificar deployment
-              $deploymentName = "$serviceName-deployment"
-              Safe-Log "Waiting for $deploymentName rollout..."
+              Safe-Log "Checking deployments for $serviceName..."
               
-              kubectl rollout status deployment/"$deploymentName" `
-                -n "$NAMESPACE" `
-                --timeout=300s
-              
-              if (-not $?) {
-                throw "Deployment rollout failed"
+              $deploymentFound = $false
+              $SERVICE.DeploymentFiles | ForEach-Object {
+                $deploymentName = [System.IO.Path]::GetFileNameWithoutExtension($_)
+                
+                try {
+                  $rolloutStatus = kubectl rollout status deployment/"$deploymentName" `
+                    -n "$NAMESPACE" `
+                    --timeout=300s `
+                    2>&1
+                  
+                  if ($?) {
+                    $deploymentFound = $true
+                    Safe-Log "Deployment $deploymentName rollout successful"
+                  }
+                }
+                catch {
+                  Safe-Log "No deployment found for $deploymentName"
+                }
               }
               
-              # Obter logs do serviço
-              Get-ServiceLogs -ServiceName $serviceName -Namespace $NAMESPACE
+              if (-not $deploymentFound) {
+                throw "No deployments found for $serviceName"
+              }
               
               Safe-Log "$serviceName deployment successful"
             }
@@ -272,13 +258,10 @@ jobs:
               
               # Logs de diagnóstico
               Safe-Log "Deployment status:"
-              kubectl get deployments -l app="$serviceName" -n "$NAMESPACE"
+              kubectl get deployments -n "$NAMESPACE"
               
               Safe-Log "Pods status:"
-              kubectl get pods -l app="$serviceName" -n "$NAMESPACE"
-              
-              # Obter logs detalhados em caso de erro
-              Get-ServiceLogs -ServiceName $serviceName -Namespace $NAMESPACE
+              kubectl get pods -n "$NAMESPACE"
               
               exit 1
             }
@@ -289,24 +272,25 @@ jobs:
         shell: pwsh
         run: |
           $SERVICES = @(
-            "HelHelperUser",
-            "HelthHelperAuth", 
+            "user-register-consumer-deployment",
+            "user-register-producer-deployment",
+            "auth-service-deployment",
             "HelthHelperConsumer",
             "HelthHelperProducer"
           )
           $NAMESPACE = "default"
 
-          foreach ($SERVICE in $SERVICES) {
-            Safe-Log "Verifying $SERVICE..."
+          foreach ($DEPLOYMENT in $SERVICES) {
+            Safe-Log "Verifying $DEPLOYMENT..."
             
-            $deployment = kubectl get deployment "$SERVICE-deployment" `
+            $replicas = kubectl get deployment "$DEPLOYMENT" `
               -n "$NAMESPACE" `
               -o jsonpath='{.status.availableReplicas}'
             
-            if ($deployment -lt 1) {
-              Write-Error "Deployment $SERVICE does not have any available replicas"
+            if ($replicas -lt 1) {
+              Write-Error "Deployment $DEPLOYMENT does not have any available replicas"
               exit 1
             }
             
-            Safe-Log "$SERVICE verification completed successfully"
+            Safe-Log "$DEPLOYMENT verification completed successfully"
           }
