@@ -148,7 +148,38 @@ jobs:
           # Função para logar com segurança
           function Safe-Log {
             param([string]$Message)
-            if ($Message) { Write-Host $Message }
+            if ($Message) { 
+              try {
+                Write-Host $Message
+              }
+              catch {
+                [Console]::WriteLine($Message)
+              }
+            }
+          }
+          
+          # Função para executar comando kubectl com tratamento de erro
+          function Invoke-Kubectl {
+            param(
+              [string[]]$Arguments,
+              [switch]$SuppressErrors
+            )
+            
+            try {
+              $output = kubectl @Arguments 2>&1
+              
+              if (-not $SuppressErrors -and $LASTEXITCODE -ne 0) {
+                throw "kubectl command failed: $Arguments"
+              }
+              
+              return $output
+            }
+            catch {
+              Safe-Log "Error running kubectl $Arguments`: $($_.Exception.Message)"
+              if (-not $SuppressErrors) {
+                throw
+              }
+            }
           }
           
           # Definir serviços com seus nomes de deployment corretos
@@ -189,7 +220,7 @@ jobs:
           @("k8s/RabbitMQ", "k8s/config") | ForEach-Object {
             if (Test-Path $_) {
               Safe-Log "Applying configurations from $_..."
-              kubectl apply -f $_
+              Invoke-Kubectl -Arguments @("apply", "-f", $_)
             }
           }
           
@@ -223,37 +254,45 @@ jobs:
                 $updatedContent | Set-Content $fullPath
                 
                 Safe-Log ("Applying " + $deploymentFile)
-                kubectl apply -f $fullPath
-                
-                if (-not $?) {
-                  throw "Failed to apply $deploymentFile"
-                }
+                Invoke-Kubectl -Arguments @("apply", "-f", $fullPath)
               }
               
               # Verificar deployment diretamente
-              Safe-Log "Waiting for $deploymentName deployment rollout..."
+              Safe-Log ("Waiting for " + $deploymentName + " deployment rollout...")
               
               $timeout = 300
               $startTime = Get-Date
               
               while ($true) {
-                $deployment = kubectl get deployment "$deploymentName" `
-                  -n "$NAMESPACE" `
-                  -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
+                $deploymentStatus = Invoke-Kubectl -Arguments @(
+                  "get", 
+                  "deployment", 
+                  $deploymentName, 
+                  "-n", 
+                  $NAMESPACE, 
+                  "-o", 
+                  "jsonpath={.status.conditions[?(@.type=='Available')].status}"
+                ) -SuppressErrors
                 
-                $readyReplicas = kubectl get deployment "$deploymentName" `
-                  -n "$NAMESPACE" `
-                  -o jsonpath='{.status.readyReplicas}'
+                $readyReplicas = Invoke-Kubectl -Arguments @(
+                  "get", 
+                  "deployment", 
+                  $deploymentName, 
+                  "-n", 
+                  $NAMESPACE, 
+                  "-o", 
+                  "jsonpath={.status.readyReplicas}"
+                ) -SuppressErrors
                 
-                if ($deployment -eq "True" -and $readyReplicas -gt 0) {
-                  Safe-Log "Deployment $deploymentName is ready with $readyReplicas replicas"
+                if ($deploymentStatus -eq "True" -and $readyReplicas -gt 0) {
+                  Safe-Log ("Deployment " + $deploymentName + " is ready with " + $readyReplicas + " replicas")
                   break
                 }
                 
                 # Verificar timeout
                 $elapsedTime = (Get-Date) - $startTime
                 if ($elapsedTime.TotalSeconds -gt $timeout) {
-                  throw "Deployment $deploymentName timed out after $timeout seconds"
+                  throw ("Deployment " + $deploymentName + " timed out after " + $timeout + " seconds")
                 }
                 
                 # Pequeno delay para evitar sobrecarga
@@ -263,18 +302,18 @@ jobs:
               Safe-Log "$serviceName deployment successful"
             }
             catch {
-              Safe-Log "Deployment error for $serviceName`: $($_.Exception.Message)"
+              Safe-Log ("Deployment error for " + $serviceName + ": " + $_.Exception.Message)
               
               # Logs de diagnóstico
               Safe-Log "Deployment status:"
-              kubectl get deployments -n "$NAMESPACE"
+              Invoke-Kubectl -Arguments @("get", "deployments", "-n", $NAMESPACE)
               
               Safe-Log "Pods status:"
-              kubectl get pods -n "$NAMESPACE"
+              Invoke-Kubectl -Arguments @("get", "pods", "-n", $NAMESPACE)
               
               # Detalhes específicos do deployment com problema
-              Safe-Log "Detailed deployment status for $deploymentName:"
-              kubectl describe deployment "$deploymentName" -n "$NAMESPACE"
+              Safe-Log ("Detailed deployment status for " + $deploymentName + ":")
+              Invoke-Kubectl -Arguments @("describe", "deployment", $deploymentName, "-n", $NAMESPACE)
               
               exit 1
             }
@@ -296,23 +335,35 @@ jobs:
           foreach ($DEPLOYMENT in $SERVICES) {
             Safe-Log "Verifying $DEPLOYMENT..."
             
-            $readyReplicas = kubectl get deployment "$DEPLOYMENT" `
-              -n "$NAMESPACE" `
-              -o jsonpath='{.status.readyReplicas}'
+            $readyReplicas = Invoke-Kubectl -Arguments @(
+              "get", 
+              "deployment", 
+              $DEPLOYMENT, 
+              "-n", 
+              $NAMESPACE, 
+              "-o", 
+              "jsonpath={.status.readyReplicas}"
+            ) -SuppressErrors
             
-            $availableReplicas = kubectl get deployment "$DEPLOYMENT" `
-              -n "$NAMESPACE" `
-              -o jsonpath='{.status.availableReplicas}'
+            $availableReplicas = Invoke-Kubectl -Arguments @(
+              "get", 
+              "deployment", 
+              $DEPLOYMENT, 
+              "-n", 
+              $NAMESPACE, 
+              "-o", 
+              "jsonpath={.status.availableReplicas}"
+            ) -SuppressErrors
             
             if ($readyReplicas -lt 1 -or $availableReplicas -lt 1) {
               Write-Error "Deployment $DEPLOYMENT does not have any ready or available replicas"
               
               # Logs de diagnóstico adicionais
               Safe-Log "Deployment details:"
-              kubectl describe deployment "$DEPLOYMENT" -n "$NAMESPACE"
+              Invoke-Kubectl -Arguments @("describe", "deployment", $DEPLOYMENT, "-n", $NAMESPACE)
               
               Safe-Log "Pod status:"
-              kubectl get pods -l app="$DEPLOYMENT" -n "$NAMESPACE"
+              Invoke-Kubectl -Arguments @("get", "pods", "-l", "app=$DEPLOYMENT", "-n", $NAMESPACE)
               
               exit 1
             }
