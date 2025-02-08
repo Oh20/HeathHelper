@@ -6065,6 +6065,10 @@
             "target": "Package",
             "version": "[6.5.1, )"
           },
+          "HealthHelperDTOs": {
+            "target": "Package",
+            "version": "[1.0.0, )"
+          },
           "Microsoft.AspNet.Identity.Core": {
             "target": "Package",
             "version": "[2.2.4, )"
