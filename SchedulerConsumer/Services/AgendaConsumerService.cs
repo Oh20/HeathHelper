@@ -1,47 +1,43 @@
-﻿public class AgendaConsumerService : BackgroundService
+﻿public class AgendaConsumerService : IHostedService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private AgendaConsumer _consumer;
+    private readonly AgendaConsumer _consumer;
+    private readonly ILogger<AgendaConsumerService> _logger;
 
-    public AgendaConsumerService(IServiceProvider serviceProvider)
+    public AgendaConsumerService(
+        AgendaConsumer consumer,
+        ILogger<AgendaConsumerService> logger)
     {
-        _serviceProvider = serviceProvider;
+        _consumer = consumer;
+        _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
         try
         {
-            var logger = _serviceProvider.GetRequiredService<ILogger<AgendaConsumer>>();
-            var config = _serviceProvider.GetRequiredService<IConfiguration>();
-            var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
-
-            _consumer = new AgendaConsumer(
-                config.GetConnectionString("RabbitMQ"),
-                _serviceProvider,
-                logger,
-                httpClientFactory,
-                config["UserServiceUrl"]
-            );
-
+            _logger.LogInformation("Iniciando o consumo de mensagens...");
             _consumer.StartConsuming();
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await Task.Delay(1000, stoppingToken);
-            }
+            return Task.CompletedTask;
         }
         catch (Exception ex)
         {
-            var logger = _serviceProvider.GetRequiredService<ILogger<AgendaConsumerService>>();
-            logger.LogError(ex, "Erro no AgendaConsumerService");
+            _logger.LogError(ex, "Erro ao iniciar o consumo de mensagens");
             throw;
         }
     }
 
-    public override Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken)
     {
-        _consumer?.Dispose();
-        return base.StopAsync(cancellationToken);
+        try
+        {
+            _logger.LogInformation("Parando o consumo de mensagens...");
+            _consumer.Dispose();
+            return Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao parar o consumo de mensagens");
+            throw;
+        }
     }
 }

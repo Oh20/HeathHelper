@@ -1,14 +1,21 @@
 using Microsoft.EntityFrameworkCore;
+using static AgendaConsumer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configurações do RabbitMQ
-var rabbitMQHostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "localhost";
-var rabbitMQPort = Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672";
-var rabbitMQUser = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest";
-var rabbitMQPassword = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest";
+var rabbitConfig = new RabbitMQConfig
+{
+    HostName = Environment.GetEnvironmentVariable("RabbitMQ__HostName") ?? "localhost",
+    Port = int.Parse(Environment.GetEnvironmentVariable("RabbitMQ__Port") ?? "5672"),
+    UserName = Environment.GetEnvironmentVariable("RabbitMQ__UserName") ?? "guest",
+    Password = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest"
+};
 
-var rabbitMQConnectionString = $"amqp://{rabbitMQUser}:{rabbitMQPassword}@{rabbitMQHostName}:{rabbitMQPort}";
+builder.Services.AddSingleton(rabbitConfig);
+
+builder.Services.AddSingleton<AgendaConsumer>();
+builder.Services.AddHostedService<AgendaConsumerService>();
 
 // Configuração do SQL Server
 var dbConnection = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
@@ -43,13 +50,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     ),
     ServiceLifetime.Transient
 );
-
-// Configuração do Consumer Service
-builder.Services.AddSingleton(sp => new Dictionary<string, string>
-{
-    { "RabbitMQ:ConnectionString", rabbitMQConnectionString },
-    { "UserServiceUrl", userServiceUrl }
-});
 
 builder.Services.AddHostedService<AgendaConsumerService>();
 
